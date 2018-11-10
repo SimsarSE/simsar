@@ -39,9 +39,10 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django.forms',
     'template_forms',
+    'crispy_forms',
 
 ]
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'tr'
 
 TIME_ZONE = 'Europe/Istanbul'
 

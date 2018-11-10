@@ -7,10 +7,11 @@ class CustomUserCreationForm(bs4.BlockForm, UserCreationForm):
 
     class Meta(UserCreationForm):
         model = CustomUser
-        fields = ('first_name', 'last_name', 'username', 'email', 'phone', )
+
+        fields = ('first_name', 'last_name', 'username', 'email', 'GSM',)
 
 class CustomUserChangeForm(bs4.BlockForm, UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name', 'email', 'phone', )
+        fields = ('first_name', 'last_name', 'email', 'GSM', )
