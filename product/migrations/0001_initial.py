@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('bread_date', models.DateField(verbose_name='Bread Date')),
                 ('harvest_date', models.DateField(verbose_name='Harvest Date')),
                 ('product_content', models.TextField(verbose_name='Product Information')),
-                ('publising_date', models.DateTimeField(verbose_name='Publishing Date')),
+                ('create_date', models.DateTimeField(verbose_name='Create Date')),
                 ('product_photo', models.ImageField(upload_to='', verbose_name='Product Photo')),
             ],
         ),
