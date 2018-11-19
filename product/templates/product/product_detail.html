@@ -1,13 +1,22 @@
 {% include 'base.html' %}
 
 {% block content %}
-    <div class="post">
-
-        <h1>{{ product.productname }}</h1>
-        <p>{{ product.quantity }}</p>
-        <p>{{ product.price }}</p>
-        {% if product.product_photo%}
-        <img src="{{ product.product_photo.url }}" width="250">
+    <div class="row" align="center">
+        <div class="col-md-12" align="center">
+        {% if product.product_photo %}
+            <img src="{{ product.product_photo.url }}" width="500">
         {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" align="center">
+            <h1>{{ product.productname }}</h1>
+            <p>{{ product.quantity }}</p>
+            <p>{{ product.bread_date }}</p>
+            <p>{{ product.harvest_date }}</p>
+            <p>{{ product.location }}</p>
+             <p>{{ product.price }}</p>
+            <p>{{ product.product_content }}</p>
+        </div>
     </div>
 {% endblock %}
