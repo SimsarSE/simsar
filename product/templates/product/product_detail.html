@@ -19,4 +19,11 @@
             <p>{{ product.product_content }}</p>
         </div>
     </div>
+
+    <div align="center">
+    {% if product.seller == request.user %}
+        <a href="{% url 'product_edit' pk=product.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span> </a>
+    {% endif %}
+
+    </div>
 {% endblock %}
