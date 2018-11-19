@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
+
 from users.models import CustomUser
 from .models import Product
 from .forms import ProductForm
@@ -13,7 +14,7 @@ def product_list(request):
 def product_new(request):
     current_user = request.user
     if request.method == "POST":
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.seller = current_user

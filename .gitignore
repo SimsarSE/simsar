@@ -105,3 +105,6 @@ simsarvenv
 .mypy_cache/
 
 .idea
+
+#images
+product_image/*

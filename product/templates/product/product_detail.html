@@ -6,5 +6,8 @@
         <h1>{{ product.productname }}</h1>
         <p>{{ product.quantity }}</p>
         <p>{{ product.price }}</p>
+        {% if product.product_photo%}
+        <img src="{{ product.product_photo.url }}" width="250">
+        {% endif %}
     </div>
 {% endblock %}
