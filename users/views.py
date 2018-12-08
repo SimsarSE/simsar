@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from .forms import CustomUserCreationForm, EditProfileForm
+from users.models import CustomUser
 
 class SignUp(generic.CreateView):
     form_class = CustomUserCreationForm
@@ -12,11 +13,9 @@ class SignUp(generic.CreateView):
 
     template_name = 'signup.html'
 
-def home(request):
-    return render(request, "home.html", {"user" : request.user})
-
-def view_profile(request):
-    args = {'user': request.user}
+def view_profile(request, pk):
+    profile = get_object_or_404(CustomUser, pk=pk)
+    args = {'user': profile}
     return render(request, 'profile.html', args)
 
 def edit_profile(request):
