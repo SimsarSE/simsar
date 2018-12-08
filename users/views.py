@@ -9,6 +9,7 @@ from .forms import CustomUserCreationForm, EditProfileForm
 class SignUp(generic.CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
+
     template_name = 'signup.html'
 
 def home(request):
@@ -46,6 +47,3 @@ def change_password(request):
         args = {'form': form}
 
     return render(request, 'change_password.html', args)
-
-
-

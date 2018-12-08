@@ -105,4 +105,8 @@ simsarvenv
 .mypy_cache/
 
 .idea
-product_image/
+
+#images
+product_image/**
+!product_image/.gitkeep
+

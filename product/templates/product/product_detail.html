@@ -1,9 +1,29 @@
 {% include 'base.html' %}
 
 {% block content %}
-    <div class="post">
+    <div class="row" align="center">
+        <div class="col-md-12" align="center">
+        {% if product.product_photo %}
+            <img src="{{ product.product_photo.url }}" width="500">
+        {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" align="center">
+            <h1>{{ product.productname }}</h1>
+            <p>{{ product.quantity }}</p>
+            <p>{{ product.bread_date }}</p>
+            <p>{{ product.harvest_date }}</p>
+            <p>{{ product.location }}</p>
+             <p>{{ product.price }}</p>
+            <p>{{ product.product_content }}</p>
+        </div>
+    </div>
 
-        <h1>{{ product.productname }}</h1>
-        <p>{{ product.quantity }}</p>
+    <div align="center">
+    {% if product.seller == request.user %}
+        <a href="{% url 'product_edit' pk=product.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span> </a>
+    {% endif %}
+
     </div>
 {% endblock %}

@@ -1,7 +1,23 @@
 {% include 'base.html' %}
 
 {% block content %}
-    {% for product in products %}
-            <h1><a href="{% url 'product_detail' pk=product.pk %}">{{ product.productname }}</a></h1>
-    {% endfor %}
+    <div class="col-md-12">
+        <div align="center">
+            {% for product in products %}
+                <div class="row">
+                <div class="col-md-4">
+                <h1><a href="{% url 'product_detail' pk=product.pk %}">{{ product.productname }}</a></h1>
+                </div>
+                <div class="col-md-4">
+                {% if product.product_photo %}
+                    <img src="{{ product.product_photo.url }}" width="100">
+                {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <p>{{ product.price }}</p>
+                </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

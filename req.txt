@@ -4,3 +4,4 @@ phonenumbers
 django-template-forms
 django-crispy-forms
 Pillow
+django-money
