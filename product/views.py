@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-
 from users.models import CustomUser
 from .models import Product
 from .forms import ProductForm
@@ -27,9 +26,11 @@ def product_new(request):
     else:
         return render(request, 'product/product_list.html')
 
+
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'product/product_detail.html', {'product': product})
+
 
 def product_edit(request, pk):
     current_user = request.user
