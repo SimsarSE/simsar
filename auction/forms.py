@@ -3,7 +3,7 @@ from django import forms
 from .models import Auction
 
 
-class ProductForm(forms.ModelForm):
+class AuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
         fields = (

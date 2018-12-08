@@ -24,8 +24,8 @@
     </div>
 
     <div align="center">
-        {% if product.seller == request.user %}
-            <a href="{% url 'auction_edit' pk=product.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span> </a>
+        {% if auction.auctioneer == request.user %}
+            <a href="{% url 'auction_edit' pk=auction.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span> </a>
         {% endif %}
 
     </div>

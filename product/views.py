@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from users.models import CustomUser
 from .models import Product
 from .forms import ProductForm
 

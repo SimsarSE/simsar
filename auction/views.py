@@ -1,18 +1,46 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from auction.models import Auction
+from .forms import AuctionForm
 
 
 def auction_list(request):
-    # TODO Auction List
-    pass
+    auctions = Auction.objects.all()
+    return render(request, 'auction/auction_list.html', {'auctions': auctions})
 
 def auction_new(request):
-    #TODO create new auction
-    pass
+    current_user = request.user
+    if current_user:
+        if request.method == "POST":
+            form = AuctionForm(request.POST, request.FILES)
+            if form.is_valid():
+                auction = form.save(commit=False)
+                auction.auctioneer = current_user
+                auction.save()
+                return redirect('auction_detail', pk=auction.pk)
+        else:
+            form = AuctionForm()
+        return render(request, 'auction/auction_edit.html', {'form': form})
+    else:
+        return render(request, 'product/product_list.html')
+
 
 def auction_detail(request, pk):
-    # TODO Show Auction Detail
-    pass
+    auction = get_object_or_404(Auction, pk=pk)
+    return render(request, 'auction/auction_detail.html', {'auction': auction})
 
 def auction_edit(request, pk):
-    # TODO Edit auction according to pk
-    pass
+    current_user = request.user
+    auction = get_object_or_404(Auction, pk=pk)
+    if current_user == auction.auctioneer:
+        if request.method == "POST":
+            form = AuctionForm(request.POST, request.FILES, instance=auction)
+            if form.is_valid():
+                auction = form.save(commit=False)
+                auction.auctioneer = current_user
+                auction.save()
+                return redirect('auction_detail', pk=auction.pk)
+        else:
+            form = AuctionForm(instance=auction)
+        return render(request, 'auction/auction_edit.html', {'form': form})
+    else:
+        return render(request, 'auction/auction_list.html')
