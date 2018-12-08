@@ -1,0 +1,20 @@
+from django.db import models
+from django.utils import timezone
+from djmoney.models.fields import MoneyField
+from users.models import CustomUser
+
+class Auction(models.Model):
+    productname = models.CharField(max_length=120, verbose_name='Product Name')
+    quantity = models.IntegerField(verbose_name='Product Quantity')
+    location = models.CharField(max_length=200)
+    bread_date = models.DateField(verbose_name='Bread Date')
+    harvest_date = models.DateField(verbose_name='Harvest Date')
+    product_content = models.TextField(verbose_name='Product Information')
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='TRY')
+    create_date = models.DateTimeField(default=timezone.now, verbose_name='Create Date')
+    product_photo = models.ImageField(verbose_name='Product Photo', blank=True)
+    auctioneer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='auctioneer', default=0)
+    min_auction_time =  models.IntegerField(verbose_name='Auction period of validity')
+    start_time =  models.DateTimeField(verbose_name='Start Time')
+
+# Create your models here.
