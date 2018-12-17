@@ -16,5 +16,18 @@ class Auction(models.Model):
     auctioneer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='auctioneer', default=0)
     min_auction_time =  models.IntegerField(verbose_name='Auction period of validity')
     start_time =  models.DateTimeField(verbose_name='Start Time')
+    is_active = models.BooleanField(default=False)
 
-# Create your models here.
+    def create_auctionReady(self):
+        isNow = self.start_time.timestamp() - timezone.now().timestamp()
+        if (isNow <= 0):
+            self.is_active = True
+            self.save()
+
+
+class AuctionReady(models.Model):
+    auction_ref = models.ForeignKey(Auction, on_delete=models.CASCADE)
+    user_ref = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    auction_price = MoneyField(max_digits=14, decimal_places=2, default_currency='TRY', default=0)
+    time_stamp = models.DateTimeField(default=timezone.now, verbose_name='Time')
+

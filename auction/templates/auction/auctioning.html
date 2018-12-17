@@ -22,13 +22,13 @@
             <p>{{ auction.min_auction_time }}</p>
         </div>
     </div>
-    {% if auction.is_active %}
-        <div class="row" align="center">
-            <div class="col-md-12">
-                <button type="reset">Pay More</button>
-            </div>
+
+    <div class="row" align="center">
+        <div class="col-md-12">
+            <button type="reset">Pay More</button>
         </div>
-    {% endif %}
+    </div>
+
     <div class="row" align="center">
         <div class="col-md-12">
             {% if auction.auctioneer == request.user %}

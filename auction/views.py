@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from auction.models import Auction
+from auction.models import Auction, AuctionReady
 from .forms import AuctionForm
 
 
 def auction_list(request):
     auctions = Auction.objects.all()
+    for auction in auctions:
+        Auction.create_auctionReady(auction)
     return render(request, 'auction/auction_list.html', {'auctions': auctions})
 
 def auction_new(request):
@@ -26,7 +28,10 @@ def auction_new(request):
 
 def auction_detail(request, pk):
     auction = get_object_or_404(Auction, pk=pk)
-    return render(request, 'auction/auction_detail.html', {'auction': auction})
+    if auction.is_active:
+        return render(request, 'auction/auctioning.html', {'auction': auction})
+    else:
+        return render(request, 'auction/auction_detail.html', {'auction': auction})
 
 def auction_edit(request, pk):
     current_user = request.user
