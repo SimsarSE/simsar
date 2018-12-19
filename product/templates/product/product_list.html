@@ -1,6 +1,14 @@
 {% include 'base.html' %}
+{% load static %}
+<html>
+<body>
+<link rel="stylesheet" href="{% static 'product/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'product/css/bootstrap.css' %}">
 
-{% block content %}
+</body>
+<body>
+
+
     <div class="col-md-12">
         <div align="center">
         <a href="{% url 'auction_list' %}">Auctions Lists</a>
@@ -21,4 +29,44 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+
+
+{% block content %}
+  {% for product in products %}
+	<div class=" tab-content tab-content-t ">
+					<div class="tab-pane active text-style" id="tab1">
+						<div class=" con-w3l">
+							<div class="col-md-3 m-wthree">
+								<div class="col-m">
+                                <div>
+									<a  data-toggle="modal" data-target="#myModal1" class="offer-img">
+                                        {% if product.product_photo %}
+                                            <img src="{{ product.product_photo.url }}" width="100">
+                                        {% endif %}
+										<div class="offer"><p><span>{{ product.location }}</span></p></div>
+									</a>
+                                </div>
+									<div class="mid-1">
+										<div class="women">
+											<h6><a href="{% url 'product_detail' pk=product.pk %}">{{ product.productname }}</a>({{ product.quantity }} kg)</h6>
+										</div>
+										<div class="mid-2">
+											<p ><em class="item_price">{{ product.price }}</em></p>
+											  <div class="block">
+												<div class="starbox small ghosting"> </div>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+										<div class="add">
+										   <a href="{% url 'product_detail' pk=product.pk %}">
+                                               <button class="btn btn-danger my-cart-btn my-cart-b " >details</button>
+                                           </a>
+										</div>
+
+									</div>
+								</div>
+							</div>
+     {% endfor %}
+   {% endblock %}
+</body>
+</html>
