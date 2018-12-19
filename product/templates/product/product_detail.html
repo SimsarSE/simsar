@@ -3,30 +3,48 @@
 {% block content %}
     <div class="row" align="center">
         <div class="col-md-12" align="center">
-        {% if product.product_photo %}
-            <img src="{{ product.product_photo.url }}" width="500">
-        {% endif %}
+            {% if product.product_photo %}
+                <img src="{{ product.product_photo.url }}" width="500">
+            {% endif %}
         </div>
     </div>
     <div class="row">
         <div class="col-md-12" align="center">
-            <a href="{% url 'profile' pk=product.seller.id  %}"> {{ product.seller.username }}  </a>
+            <a href="{% url 'profile' pk=product.seller.id %}"> {{ product.seller.username }}  </a>
             <h1>{{ product.productname }}</h1>
             <p>{{ product.quantity }}</p>
             <p>{{ product.bread_date }}</p>
             <p>{{ product.harvest_date }}</p>
             <p>{{ product.location }}</p>
-             <p>{{ product.price }}</p>
+            <p>{{ product.price }}</p>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalForm" onclick="offer()">
+                Offer
+            </button>
             <p>{{ product.product_content }}</p>
         </div>
     </div>
 
     <div align="center">
-    {% if product.seller == request.user %}
-        <a href="{% url 'product_edit' pk=product.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span> </a>
-    {% endif %}
+        {% if product.seller == request.user %}
+            <a href="{% url 'product_edit' pk=product.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span> </a>
+        {% endif %}
 
 
-
+        <div align="center" class="modal fade" id="modalForm" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content" style="height: 250px; ">
+                    <form>
+                        <p style="margin-top: 20px"><b>Offer</b><br></p>
+                        <input type="text" value="{{ product.price }}" style="margin-top: 50px"> <br>
+                        <button type="submit" class="btn btn-success" style="margin-top: 20px">Offer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+    <script>
+        function offer() {
+
+        }
+    </script>
 {% endblock %}
