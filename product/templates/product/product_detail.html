@@ -45,7 +45,14 @@
     <script>
         function offer() {
             var str = document.getElementById("offer_value").value;
-            str.test([0-9])
+            str.replace(/\D/g, "");
+            $.post("deal/{{ product.id }}",
+                {
+                    offer: str
+                },
+            function (data, status) {
+                alert("Your request is send")
+            })
 
         }
     </script>
