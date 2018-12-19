@@ -17,7 +17,7 @@
             <p>{{ product.harvest_date }}</p>
             <p>{{ product.location }}</p>
             <p>{{ product.price }}</p>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalForm" onclick="offer()">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalForm">
                 Offer
             </button>
             <p>{{ product.product_content }}</p>
@@ -35,8 +35,8 @@
                 <div class="modal-content" style="height: 250px; ">
                     <form>
                         <p style="margin-top: 20px"><b>Offer</b><br></p>
-                        <input type="text" value="{{ product.price }}" style="margin-top: 50px"> <br>
-                        <button type="submit" class="btn btn-success" style="margin-top: 20px">Offer</button>
+                        <input type="text" id="offer_value" value="{{ product.price }}" style="margin-top: 50px"> <br>
+                        <button type="submit" class="btn btn-success" style="margin-top: 20px" onclick="offer()">Offer</button>
                     </form>
                 </div>
             </div>
@@ -44,6 +44,8 @@
     </div>
     <script>
         function offer() {
+            var str = document.getElementById("offer_value").value;
+            str.test([0-9])
 
         }
     </script>
