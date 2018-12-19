@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
+from selling.models import Offers
 from .models import Product
 from .forms import ProductForm
 
@@ -28,7 +29,12 @@ def product_new(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'product/product_detail.html', {'product': product})
+    has_offer = True
+    try:
+        Offers.objects.get(offer_bidder=request.user)
+    except:
+        has_offer = False
+    return render(request, 'product/product_detail.html', {'product': product, 'has_offer':has_offer})
 
 
 def product_edit(request, pk):

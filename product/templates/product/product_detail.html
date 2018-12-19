@@ -17,8 +17,13 @@
             <p>{{ product.harvest_date }}</p>
             <p>{{ product.location }}</p>
             <p>{{ product.price }}</p>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalForm">
-                Offer
+            {% if  not has_offer %}
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalForm">
+                    Offer
+                </button>
+            {% endif %}
+            <button class="btn btn-success">
+                Buy
             </button>
             <p>{{ product.product_content }}</p>
         </div>
@@ -30,24 +35,27 @@
         {% endif %}
 
 
+
         <div align="center" class="modal fade" id="modalForm" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content" style="height: 250px; ">
                     <p style="margin-top: 20px"><b>Offer</b><br></p>
                     <input type="text" id="offer_value" value="{{ product.price }}" style="margin-top: 50px"> <br>
-                    <button class="btn btn-success" id="submit" style="margin-top: 20px" >Offer
+                    <button class="btn btn-success" id="submit" style="margin-top: 20px">Offer
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
     <script>
         $("#submit").click(function () {
             var data = document.getElementById("offer_value").value.replace(/\D/g, "");
             $.ajax({
-                type:"POST",
-                url:"{% url 'deal' pk=product.id %}",
-                data:{"offer":data,  csrfmiddlewaretoken: '{{ csrf_token }}'}
+                type: "POST",
+                url: "{% url 'deal' pk=product.id %}",
+                data: {"offer": data, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                success: $('#modalForm').modal('hide')
             })
 
         })
