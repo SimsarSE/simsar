@@ -33,27 +33,23 @@
         <div align="center" class="modal fade" id="modalForm" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content" style="height: 250px; ">
-                    <form>
-                        <p style="margin-top: 20px"><b>Offer</b><br></p>
-                        <input type="text" id="offer_value" value="{{ product.price }}" style="margin-top: 50px"> <br>
-                        <button type="submit" class="btn btn-success" style="margin-top: 20px" onclick="offer()">Offer</button>
-                    </form>
+                    <p style="margin-top: 20px"><b>Offer</b><br></p>
+                    <input type="text" id="offer_value" value="{{ product.price }}" style="margin-top: 50px"> <br>
+                    <button class="btn btn-success" id="submit" style="margin-top: 20px" >Offer
+                    </button>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        function offer() {
-            var str = document.getElementById("offer_value").value;
-            str.replace(/\D/g, "");
-            $.post("deal/{{ product.id }}",
-                {
-                    offer: str
-                },
-            function (data, status) {
-                alert("Your request is send")
+        $("#submit").click(function () {
+            var data = document.getElementById("offer_value").value.replace(/\D/g, "");
+            $.ajax({
+                type:"POST",
+                url:"{% url 'deal' pk=product.id %}",
+                data:{"offer":data,  csrfmiddlewaretoken: '{{ csrf_token }}'}
             })
 
-        }
+        })
     </script>
 {% endblock %}

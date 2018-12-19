@@ -1,4 +1,3 @@
-from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils import timezone
 from djmoney.models.fields import MoneyField
