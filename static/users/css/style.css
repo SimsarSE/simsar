@@ -676,7 +676,7 @@ ul.nav.tabs {
 }
 .offer p{
     background: #ED0612;
-    border-radius: 100px 0px 0px 100px;
+    border-radius: 100px 10px 10px 100px;
     text-align: center;
     line-height: 0em !important;
     font-size: 0.9em !important;
