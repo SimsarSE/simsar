@@ -610,7 +610,7 @@ ul.nav.tabs {
 	border-bottom: 2px solid #000
 }
 .nav > li > a:hover, .nav > li > a:focus {
-    background: none;
+    background: white;
 }
 
 .tab-content-t {
