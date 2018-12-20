@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'product',
     'djmoney',
     'auction',
+    'channels',
 
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -61,6 +62,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'simsar_site.urls'
+ASGI_APPLICATION = "simsar_site.routing.application"
 
 TEMPLATES = [
     {
@@ -78,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'simsar_site.wsgi.application'
+#WSGI_APPLICATION = 'simsar_site.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -132,4 +134,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'product_image')
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
 

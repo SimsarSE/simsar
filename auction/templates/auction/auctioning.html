@@ -1,6 +1,7 @@
 {% include 'base.html' %}
 
 {% block content %}
+    {% load crispy_forms_tags %}
     <div class="row" align="center">
         <div class="col-md-12" align="center">
             {% if auction.product_photo %}
@@ -22,19 +23,77 @@
             <p>{{ auction.min_auction_time }}</p>
         </div>
     </div>
-
     <div class="row" align="center">
-        <div class="col-md-12">
-            <button type="reset">Pay More</button>
+        <div class="col-md-6">
+            <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+                <input type="hidden" id="myUsername" value="{{ user.username }}"/>
+                <input type="hidden" id="id_auction" value="{{ auction.id }}"/>
+                {{ form|crispy }}
+                <button type="submit" class="save btn btn-success">Offer</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h2>OFFERS</h2>
+            <ul id="price-items">
+                {% for auctionReady in auctionReadies %}
+                    {% if auctionReady.auction_ref == auction %}
+                        <li>{{ auctionReady.auction_price }}
+                            {{ auctionReady.user_ref.username }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+    <script>
+        var formData = $(".post-form")
+        var priceInput = $("#id_auction_price_0")
+        var priceHolder = $('#price-items')
+        var me = $('#myUsername').val()
+        var id = $('#id_auction').val()
+        //console.log(window.location)
+        var loc = window.location
 
-    <div class="row" align="center">
-        <div class="col-md-12">
-            {% if auction.auctioneer == request.user %}
-                <a href="{% url 'auction_edit' pk=auction.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-            {% endif %}
-        </div>
-    </div>
+        var wsStart = 'ws://' + window.location.host + window.location.pathname
+        if (loc.protocol === 'https:') {
+            wsStart = 'wss://'
+        }
+        var endpoint = wsStart + loc.host + loc.pathname
+
+        var socket = new ReconnectingWebSocket(endpoint)
+
+        socket.onmessage = function (e) {
+            console.log("message", e)
+            var data = e.data.split("@")
+            if (data[1] === id) {
+                priceHolder.prepend("<li>" + data[0] + "</li>")
+            }
+        }
+
+
+        socket.onopen = function (e) {
+            console.log("open", e)
+            formData.submit(function (event) {
+                event.preventDefault()
+                var priceInt = priceInput.val()
+                var id_auction = id
+                //priceHolder.append("<li>" + priceInt + " " + me + "</li>")
+                var finalData = {
+                    'price': priceInt,
+                    'id': id_auction
+                }
+                socket.send(JSON.stringify(finalData))
+
+                formData[0].reset()
+            })
+        }
+
+        socket.onerror = function (e) {
+            console.log("error", e)
+        }
+
+        socket.onclose = function (e) {
+            console.log("close", e)
+        }
+    </script>
 {% endblock %}

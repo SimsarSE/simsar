@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from auction.models import Auction, AuctionReady
-from .forms import AuctionForm
+from .forms import AuctionForm, AuctionReadyForm
 
 
 def auction_list(request):
@@ -8,6 +8,7 @@ def auction_list(request):
     for auction in auctions:
         Auction.create_auctionReady(auction)
     return render(request, 'auction/auction_list.html', {'auctions': auctions})
+
 
 def auction_new(request):
     current_user = request.user
@@ -27,11 +28,25 @@ def auction_new(request):
 
 
 def auction_detail(request, pk):
+    auctionReadies = AuctionReady.objects.all().order_by('-auction_price')
+    current_user = request.user
     auction = get_object_or_404(Auction, pk=pk)
-    if auction.is_active:
-        return render(request, 'auction/auctioning.html', {'auction': auction})
+    if current_user.is_authenticated:
+        if auction.is_active:
+            form = AuctionReadyForm(request.POST)
+            if form.is_valid():
+                auctionReady = form.save(commit=False)
+                auctionReady.user_ref = current_user
+                auctionReady.auction_ref = auction
+                return redirect('auction_detail', pk=auction.pk)
+            else:
+                form = AuctionReadyForm()
+            return render(request, 'auction/auctioning.html', {'form':form, 'auction':auction, 'auctionReadies': auctionReadies})
+        else:
+            return render(request, 'auction/auction_detail.html', {'auction': auction})
     else:
-        return render(request, 'auction/auction_detail.html', {'auction': auction})
+        return redirect('signup')
+
 
 def auction_edit(request, pk):
     current_user = request.user

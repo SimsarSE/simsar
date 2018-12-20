@@ -18,6 +18,9 @@ class Auction(models.Model):
     start_time =  models.DateTimeField(verbose_name='Start Time')
     is_active = models.BooleanField(default=False)
 
+    def group_name(self):
+        return "auction-%s" % self.id
+
     def create_auctionReady(self):
         isNow = self.start_time.timestamp() - timezone.now().timestamp()
         if (isNow <= 0):
