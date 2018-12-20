@@ -4298,6 +4298,8 @@ input[type="button"].btn-block {
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .nav-link.active {
   color: white;
+  font-size: 18px;
+  padding: 19px;
 }
 
 .navbar-light .navbar-toggler {
