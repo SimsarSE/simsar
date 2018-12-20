@@ -4,14 +4,11 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %}Simsar{% endblock %}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js">
-    <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'users/css/bootstrap.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'users/css/style.css' %}">
 </head>
-<body>
+<body style="background: #FFFEF4">
 <main>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -50,10 +47,8 @@
             </ul>
         </div>
     </nav>
-    <h1>hoşgeldiniz</h1>
-    {% block content %}
-    {% endblock %}
 
+<p>beste</p>
 </main>
 </body>
 </html>
