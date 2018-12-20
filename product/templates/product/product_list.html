@@ -1,34 +1,43 @@
 {% include 'base.html' %}
 {% load static %}
-<html>
-<body>
 <link rel="stylesheet" href="{% static 'product/css/style.css' %}">
 <link rel="stylesheet" href="{% static 'product/css/bootstrap.css' %}">
 
-</body>
-<body>
+<style>
+    .col-m {
+            margin-bottom: 30px;
+            border : 7px solid #f19425;
+            border-radius: 15px 15px 50px 15px;
+            background-color: rgba(114, 28, 36, 0.95);
+        }
 
 
-    <div class="col-md-12">
-        <div align="center">
-        <a href="{% url 'auction_list' %}">Auctions Lists</a>
-            {% for product in products %}
-                <div class="row">
-                <div class="col-md-4">
-                <h1><a href="{% url 'product_detail' pk=product.pk %}">{{ product.productname }}</a></h1>
-                </div>
-                <div class="col-md-4">
-                {% if product.product_photo %}
-                    <img src="{{ product.product_photo.url }}" width="100">
-                {% endif %}
-                </div>
-                <div class="col-md-4">
-                    <p>{{ product.price }}</p>
-                </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+
+</style>
+
+{#<body>#}
+{##}
+{##}
+{#    <div class="col-md-12">#}
+{#        <div align="center">#}
+{#        <a href="{% url 'auction_list' %}">Auctions Lists</a>#}
+{#            {% for product in products %}#}
+{#                <div class="row">#}
+{#                <div class="col-md-4">#}
+{#                <h1><a href="{% url 'product_detail' pk=product.pk %}">{{ product.productname }}</a></h1>#}
+{#                </div>#}
+{#                <div class="col-md-4">#}
+{#                {% if product.product_photo %}#}
+{#                    <img src="{{ product.product_photo.url }}" width="100">#}
+{#                {% endif %}#}
+{#                </div>#}
+{#                <div class="col-md-4">#}
+{#                    <p>{{ product.price }}</p>#}
+{#                </div>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
 
 
 {% block content %}
@@ -59,7 +68,7 @@
 										</div>
 										<div class="add">
 										   <a href="{% url 'product_detail' pk=product.pk %}">
-                                               <button class="btn btn-danger my-cart-btn my-cart-b " >details</button>
+                                               <button class="btn btn-warning  ">details</button>
                                            </a>
 										</div>
 

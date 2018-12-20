@@ -669,12 +669,12 @@ ul.nav.tabs {
 	    position: absolute;
     top: 0;
     right: -15px;
-    border: 2px solid #ED0612;
+    border: 2px solid #f19425;
     border-radius: 100px 0 0 100px;
     padding: 2px;
 }
 .offer p{
-    background: #ED0612;
+    background: #f19425;
     border-radius: 100px 0px 0px 100px;
     text-align: center;
     line-height: 0em !important;
