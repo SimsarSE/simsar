@@ -1,3 +1,7 @@
+from django.utils import timezone
+from datetime import timedelta
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from auction.models import Auction, AuctionReady
 from .forms import AuctionForm, AuctionReadyForm
@@ -64,3 +68,10 @@ def auction_edit(request, pk):
         return render(request, 'auction/auction_edit.html', {'form': form})
     else:
         return render(request, 'auction/auction_list.html')
+
+def last_auction_ready(request, pk):
+    last = AuctionReady.objects.filter(auction_ref=pk).order_by("-time_stamp").first().time_stamp
+    new = last + timedelta(seconds=60) - timezone.now()
+
+    return HttpResponse(new.seconds)
+

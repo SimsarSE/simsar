@@ -25,11 +25,12 @@
     </div>
     <div class="row" align="center">
         <div class="col-md-6">
+            <p id="demo"></p>
             <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
                 <input type="hidden" id="myUsername" value="{{ user.username }}"/>
                 <input type="hidden" id="id_auction" value="{{ auction.id }}"/>
                 {{ form|crispy }}
-                <button type="submit" class="save btn btn-success">Offer</button>
+                <button type="submit" class="save btn btn-success" id="submit">Offer</button>
             </form>
         </div>
         <div class="col-md-6">
@@ -46,11 +47,13 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
     <script>
+    $(document).ready(countdown())
         var formData = $(".post-form")
         var priceInput = $("#id_auction_price_0")
         var priceHolder = $('#price-items')
         var me = $('#myUsername').val()
         var id = $('#id_auction').val()
+        var demo = $('#demo')
         //console.log(window.location)
         var loc = window.location
 
@@ -67,6 +70,7 @@
             var data = e.data.split("@")
             if (data[1] === id) {
                 priceHolder.prepend("<li>" + data[0] + "</li>")
+                countdown();
             }
         }
 
@@ -94,6 +98,31 @@
 
         socket.onclose = function (e) {
             console.log("close", e)
+        }
+
+        var remainder = 0
+        var t =  null
+        function countdown() {
+            clearTimeout(t)
+            asd = false
+            $.ajax({
+                type: "POST",
+                url: "{% url 'last_auction' pk=auction.id %}",
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                success: function (msg) {
+                    remainder = parseInt(msg)
+                    f()
+                }
+            })
+            function f() {
+                var counter = document.getElementById("demo");
+                counter.innerHTML = remainder;
+                remainder--;
+                if (remainder > 0) {
+                    t = setTimeout(f, 1000);
+                }
+
+            }
         }
     </script>
 {% endblock %}

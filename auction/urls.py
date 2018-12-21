@@ -6,4 +6,6 @@ urlpatterns = [
     path('new', views.auction_new, name='auction_new'),
     path('<int:pk>', views.auction_detail, name='auction_detail'),
     path('<int:pk>/edit', views.auction_edit, name='auction_edit'),
+    path('last_auction/<int:pk>', views.last_auction_ready, name='last_auction'),
+
 ]
