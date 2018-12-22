@@ -1,14 +1,50 @@
 {% include 'base.html' %}
 
 {% block content %}
-    <div class="post">
+        <style>
+        .col-md-9 > h3{
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            font-style: normal;
+            color: #79282e;
+        }
+    </style>
+{% comment %}    <div class="post">
         <h1>{{ user.username }}</h1>
         <h1><p>{{  user.first_name }}</p></h1>
         <p>{{  user.last_name }}</p>
         <p>{{  user.GSM }}</p>
         <p>{{  user.email }}</p>
-    </div>
+    </div>{% endcomment %}
+
+
+   <div class="container" style="margin-top: 60px; margin-left: 30px">
+    <div class="row">
+      <div class="col-sm-3">
+
+          <div class="col-md-9">
+              <h3> User Name : {{ product.productname }}</h3>
+              <hr style="size: 36px;width:300px; border-width: 2px; border-style: wave; background-color: #F19425">
+              <h3> First Name : {{ product.quantity }}</h3>
+              <hr style="size: 36px;width:300px; border-width: 2px; border-style: wave; background-color: #F19425">
+              <h3> Last Name : {{ product.bread_date }}</h3>
+              <hr style="size: 36px;width:300px; border-width: 2px; border-style: wave; background-color: #F19425">
+              <h3> GSM : {{ product.harvest_date }}</h3>
+              <hr style="size: 36px;width:300px; border-width: 2px; border-style: wave; background-color: #F19425">
+              <h3> Email : {{ product.location }}</h3>
+              <hr style="size: 36px;width:300px; border-width: 2px; border-style: wave; background-color: #F19425">
+
     {% if  request.user == user %}
             <a href="{% url 'edit_profile' %}">Edit Profile<span class="glyphicon glyphicon-pencil"></span> </a>
     {% endif %}
+          </div>
+
+
+    </div>
+        <div class="col-sm-9">
+
+        </div>
+    </div>
+    </div>
 {% endblock %}
