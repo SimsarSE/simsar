@@ -5,10 +5,20 @@
 <html>
 <head>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        .col-md-9 > h1{
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            font-style: normal;
+            color: #79282e;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="row" align="center">
+    {% comment %}<div class="row" align="center">
         <div class="col-md-12" align="center">
         {% if product.product_photo %}
             <img src="{{ product.product_photo.url }}" width="500">
@@ -32,10 +42,47 @@
     {% if product.seller == request.user %}
         <a href="{% url 'product_edit' pk=product.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span> </a>
     {% endif %}
+    </div>{% endcomment %}
 
+
+
+    <div class="container" style="margin-top: 60px">
+    <div class="row">
+      <div class="col-sm-6 ">
+       {% if product.product_photo %}
+            <img src="{{ product.product_photo.url }}" width="500">
+        {% endif %}
+      </div>
+      <div class="col-sm-6">
+          <div class="col-md-9">
+              <h1> Product Name : {{ product.productname }}</h1>
+              <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+              <h1> Product Quantity : {{ product.quantity }}</h1>
+              <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+              <h1> Product name : {{ product.bread_date }}</h1>
+              <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+              <h1> Harvest Date : {{ product.harvest_date }}</h1>
+              <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+              <h1> Location : {{ product.location }}</h1>
+              <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+              <h1> Product price : {{ product.price }}</h1>
+              <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+              <h1> Product content : <text>{{ product.product_content }}</text></h1>
+              <button style="margin-top: 30px; font-size:14px; margin-left: 285px; color: #fff; padding: 6px 12px" class="btn btn-warning">Connect to seller</button>
+
+          </div>
 
 
     </div>
+    </div>
+    </div>
+
+     <div align="center">
+    {% if product.seller == request.user %}
+        <a href="{% url 'product_edit' pk=product.pk %}"><button style="padding: 4px 7px; color: #fff" class="btn btn-warning">edit  <span class="glyphicon glyphicon-pencil"></span> </button></a>
+    {% endif %}
+    </div>
+
 {% endblock %}
 </body>
 </html>
