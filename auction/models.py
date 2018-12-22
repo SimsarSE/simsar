@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from django.utils import timezone
 from djmoney.models.fields import MoneyField
@@ -29,10 +31,11 @@ class Auction(models.Model):
             self.save()
 
     def countdown(self):
-        seconds = self.min_auction_time*60
-        for i in range(seconds):
-            time.sleep(1)
-        return str(seconds - i)
+        minTime = self.start_time + timedelta(minutes=self.min_auction_time)
+        time = minTime -timezone.now()
+        if minTime > timezone.now():
+            return time.seconds
+        return -1
 
 
 
@@ -43,5 +46,3 @@ class AuctionReady(models.Model):
     user_ref = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     auction_price = MoneyField(max_digits=14, decimal_places=2, default_currency='TRY', default=0)
     time_stamp = models.DateTimeField(default=timezone.now, verbose_name='Time')
-
-

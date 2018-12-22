@@ -17,7 +17,7 @@
             <p>{{ auction.bread_date }}</p>
             <p>{{ auction.harvest_date }}</p>
             <p>{{ auction.location }}</p>
-            <p>{{ auction.price }}</p>
+            <p id="start_price">{{ auction.price }}</p>
             <p>{{ auction.product_content }}</p>
             <p>{{ auction.start_time }}</p>
             <p>{{ auction.min_auction_time }}</p>
@@ -26,7 +26,8 @@
     <div class="row" align="center">
         <div class="col-md-6">
             <p id="demo"></p>
-            <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+            <p id="first-counter">{{ auction.countdown }}</p>
+            <form method="POST" enctype="multipart/form-data" class="post-form" name="offer-form">{% csrf_token %}
                 <input type="hidden" id="myUsername" value="{{ user.username }}"/>
                 <input type="hidden" id="id_auction" value="{{ auction.id }}"/>
                 {{ form|crispy }}
@@ -46,8 +47,12 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script>
-    $(document).ready(countdown())
+        $(document).ready(function () {
+            document.getElementById("id_auction_price_0").value = ''
+            timer()
+        })
         var formData = $(".post-form")
         var priceInput = $("#id_auction_price_0")
         var priceHolder = $('#price-items')
@@ -56,6 +61,8 @@
         var demo = $('#demo')
         //console.log(window.location)
         var loc = window.location
+        var ttt = null;
+
 
         var wsStart = 'ws://' + window.location.host + window.location.pathname
         if (loc.protocol === 'https:') {
@@ -70,7 +77,9 @@
             var data = e.data.split("@")
             if (data[1] === id) {
                 priceHolder.prepend("<li>" + data[0] + "</li>")
+                clearTimeout(ttt)
                 countdown();
+
             }
         }
 
@@ -101,28 +110,82 @@
         }
 
         var remainder = 0
-        var t =  null
-        function countdown() {
-            clearTimeout(t)
-            asd = false
-            $.ajax({
-                type: "POST",
-                url: "{% url 'last_auction' pk=auction.id %}",
-                data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
-                success: function (msg) {
-                    remainder = parseInt(msg)
-                    f()
-                }
-            })
-            function f() {
-                var counter = document.getElementById("demo");
-                counter.innerHTML = remainder;
-                remainder--;
-                if (remainder > 0) {
-                    t = setTimeout(f, 1000);
-                }
+        var t = null
+        var counter_first = document.getElementById("first-counter");
+        var remainder_first = parseInt(counter_first.textContent)
 
+        function countdown() {
+            if (remainder_first <= 0) {
+                clearTimeout(t)
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'last_auction' pk=auction.id %}",
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                    success: function (msg) {
+                        remainder = parseInt(msg)
+                        f()
+                    }
+                })
             }
         }
+
+
+        function f() {
+            var counter = document.getElementById("demo");
+            if (remainder === 0) {
+                document.getElementById("submit").disabled = true
+            }
+            counter.innerHTML = remainder;
+            remainder--;
+            if (remainder >= 0) {
+                t = setTimeout(f, 1000);
+            }
+
+        }
+
+
+        $('#id_auction_price_0').keyup(function () {
+            var offer = parseFloat(document.forms["offer-form"]["auction_price_0"].value)
+            var last = 0
+            var lastPrice = 0
+            if ($("#price-items").children().length > 0) {
+                lastPrice = $("#price-items li:first-child").get(0).innerHTML
+                lastPrice = lastPrice.split(" ")
+                temp = lastPrice[0].split("₺")
+                last = parseFloat(temp[1].replace(",", ""))
+            }
+            var startPrice = document.getElementById("start_price").textContent
+            var float_price = parseFloat(startPrice.split(".")[0].replace(/\D/g, ""))
+
+            if (offer > float_price && offer > last) {
+                document.getElementById("submit").disabled = false
+            }
+            else {
+                document.getElementById("submit").disabled = true
+            }
+        });
+
+
+        function timer() {
+            counter_first.innerHTML = String(remainder_first);
+            remainder_first--;
+            if (remainder_first > 0) {
+                t = setTimeout(timer, 1000);
+            } else {
+                counter_first.innerHTML =""
+                var sec = 60
+                demo = document.getElementById("demo")
+                function f1() {
+                    sec--;
+                    if (sec >= 0) {
+                        demo.innerHTML = String(sec);
+                        ttt = setTimeout(f1, 1000);
+                    }
+                }
+                f1()
+            }
+
+        }
+
     </script>
 {% endblock %}

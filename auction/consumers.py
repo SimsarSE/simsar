@@ -30,7 +30,7 @@ class AuctionConsumer(AsyncConsumer):
         if front_text is not None:
             loaded_dict_data = json.loads(front_text)
             print(loaded_dict_data)
-            price = loaded_dict_data.get('price')
+            price = str(float(loaded_dict_data.get('price')))
             auction_id = loaded_dict_data.get('id')
             print(auction_id)
             user = self.scope['user']
