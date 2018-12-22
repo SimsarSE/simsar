@@ -1,6 +1,13 @@
 {% include 'base.html' %}
-
+{% load static %}
 {% block content %}
+
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
     <div class="row" align="center">
         <div class="col-md-12" align="center">
         {% if product.product_photo %}
@@ -11,7 +18,7 @@
     <div class="row">
         <div class="col-md-12" align="center">
             <a href="{% url 'profile' pk=product.seller.id  %}"> {{ product.seller.username }}  </a>
-            <h1>{{ product.productname }}</h1>
+            <h1> Product name : {{ product.productname }}</h1>
             <p>{{ product.quantity }}</p>
             <p>{{ product.bread_date }}</p>
             <p>{{ product.harvest_date }}</p>
@@ -30,3 +37,5 @@
 
     </div>
 {% endblock %}
+</body>
+</html>
