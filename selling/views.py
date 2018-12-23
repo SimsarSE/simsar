@@ -24,3 +24,19 @@ def buy(request, pk):
     product.is_sold = True
     product.save()
     return HttpResponse('')
+
+def accept(request, pk):
+    offer = Offers.objects.get(id=pk)
+    product = offer.offer_product
+    seller = offer.offer_seller
+    cost = offer.offer_cost
+    bidder = offer.offer_bidder
+    sold = SoldProduct(sold_cost=cost, sold_buyer=bidder, sold_seller=seller, sold_product=product)
+    sold.save()
+    product.is_sold = True
+    product.save()
+    return HttpResponse('')
+
+def reject(request, pk):
+    offer = Offers.objects.get(id=pk).delete()
+    return HttpResponse('')
