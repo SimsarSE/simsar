@@ -6,6 +6,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from .forms import CustomUserCreationForm, EditProfileForm
 from users.models import CustomUser
+from product.models import Product
 
 class SignUp(generic.CreateView):
     form_class = CustomUserCreationForm
@@ -15,7 +16,9 @@ class SignUp(generic.CreateView):
 
 def view_profile(request, pk):
     profile = get_object_or_404(CustomUser, pk=pk)
-    args = {'user': profile}
+    products = Product.objects.filter(seller=CustomUser.objects.get(id=pk)).filter(is_sold=False)
+    products_2 = Product.objects.filter(seller=CustomUser.objects.get(id=pk)).filter(is_sold=True)
+    args = {'user': profile, 'products': products, 'products_2':products_2}
     return render(request, 'profile.html', args)
 
 def edit_profile(request):
@@ -46,3 +49,8 @@ def change_password(request):
         args = {'form': form}
 
     return render(request, 'change_password.html', args)
+
+def product_info(request):
+    products = Product.objects.all()
+
+    return render(request, 'profile.html' , {'products': products} )
