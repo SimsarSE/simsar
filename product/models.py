@@ -16,3 +16,4 @@ class Product(models.Model):
     create_date = models.DateTimeField(default=timezone.now,verbose_name='Create Date')
     product_photo = models.ImageField(verbose_name='Product Photo',blank=True)
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='seller', default=0)
+    is_sold = models.BooleanField(default=False)

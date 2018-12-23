@@ -6,7 +6,7 @@ from .forms import ProductForm
 
 
 def product_list(request):
-    products = Product.objects.all()
+    products = Product.objects.all().filter(is_sold=False)
     return render(request, 'product/product_list.html', {'products': products})
 
 
@@ -31,10 +31,10 @@ def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     has_offer = True
     try:
-        Offers.objects.get(offer_bidder=request.user)
+        Offers.objects.filter(id=pk).get(offer_bidder=request.user)
     except:
         has_offer = False
-    return render(request, 'product/product_detail.html', {'product': product, 'has_offer':has_offer})
+    return render(request, 'product/product_detail.html', {'product': product, 'has_offer':has_offer,})
 
 
 def product_edit(request, pk):

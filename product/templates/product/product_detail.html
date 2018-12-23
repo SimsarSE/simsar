@@ -21,7 +21,7 @@
                 Buy
             </button>
             {% if  not has_offer %}
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalForm">
+                <button id="offer_button" type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalForm">
                     Offer
                 </button>
             {% endif %}
@@ -56,18 +56,20 @@
                 type: "POST",
                 url: "{% url 'deal' pk=product.id %}",
                 data: {"offer": data, csrfmiddlewaretoken: '{{ csrf_token }}'},
-                success: $('#modalForm').modal('hide')
+                success: function () {
+                    $('#modalForm').modal('hide')
+                    $('#offer_button').hide()
+                }
             })
 
         });
     </script>
     <script>
         $("#buy").click(function () {
-            var data2 = document.getElementById("price");
             $.ajax({
                 type: "POST",
                 url: "{% url 'buy' pk=product.id %}",
-                data: {"cost": data2, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
                 success: alert("You bought successfully")
 
             })
