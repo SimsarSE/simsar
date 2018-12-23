@@ -28,13 +28,14 @@ def product_new(request):
 
 
 def product_detail(request, pk):
+    product_offers = Offers.objects.all().filter(offer_product=Product.objects.get(id=pk))
     product = get_object_or_404(Product, pk=pk)
     has_offer = True
     try:
-        Offers.objects.filter(id=pk).get(offer_bidder=request.user)
+        Offers.objects.filter(offer_product=pk).get(offer_bidder=request.user)
     except:
         has_offer = False
-    return render(request, 'product/product_detail.html', {'product': product, 'has_offer':has_offer,})
+    return render(request, 'product/product_detail.html', {'product': product, 'has_offer':has_offer, 'offer_list': product_offers})
 
 
 def product_edit(request, pk):
