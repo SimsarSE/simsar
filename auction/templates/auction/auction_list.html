@@ -2,39 +2,43 @@
 
 {% block content %}
     <div class="col-md-12">
-    <div align="center">
-    {% for auction in auctions %}
-    {% if auction.is_active %}
-        <div class="row" style="background-color: chartreuse">
-            <div class="col-md-4">
-                <h1><a href="{% url 'auction_detail' pk=auction.pk %}">{{ auction.productname }}</a></h1>
-            </div>
-            <div class="col-md-4">
-                {% if auction.product_photo %}
-                    <img src="{{ auction.product_photo.url }}" width="100">
+        <div align="center">
+            {% for auction in auctions %}
+                {% if not auction.is_end %}
+                    {% if auction.is_active %}
+                        <div class="row" style="background-color: chartreuse">
+                            <div class="col-md-4">
+                                <h1><a href="{% url 'auction_detail' pk=auction.pk %}">{{ auction.productname }}</a>
+                                </h1>
+                            </div>
+                            <div class="col-md-4">
+                                {% if auction.product_photo %}
+                                    <img src="{{ auction.product_photo.url }}" width="100">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <p>{{ auction.price }}</p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h1><a href="{% url 'auction_detail' pk=auction.pk %}">{{ auction.productname }}</a>
+                                </h1>
+                            </div>
+                            <div class="col-md-4">
+                                {% if auction.product_photo %}
+                                    <img src="{{ auction.product_photo.url }}" width="100">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <p>{{ auction.price }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
                 {% endif %}
-            </div>
-            <div class="col-md-4">
-                <p>{{ auction.price }}</p>
-            </div>
+            {% endfor %}
         </div>
-    {% else %}
-        <div class="row">
-            <div class="col-md-4">
-                <h1><a href="{% url 'auction_detail' pk=auction.pk %}">{{ auction.productname }}</a></h1>
-            </div>
-            <div class="col-md-4">
-                {% if auction.product_photo %}
-                    <img src="{{ auction.product_photo.url }}" width="100">
-                {% endif %}
-            </div>
-            <div class="col-md-4">
-                <p>{{ auction.price }}</p>
-            </div>
-        </div>
-    {% endif %}
-{% endfor %}
-</div>
-</div>
+    </div>
 
 {% endblock %}

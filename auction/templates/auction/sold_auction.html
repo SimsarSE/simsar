@@ -1,0 +1,38 @@
+{% include 'base.html' %}
+
+{% block content %}
+    <div class="row" align="center">
+        <div class="col-md-12" align="center">
+            {% if auction.product_photo %}
+                <img src="{{ auction.product_photo.url }}" width="500">
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" align="center">
+            <a href="{% url 'profile' pk=auction.auctioneer.id %}"> {{ auction.auctioneer.username }}  </a>
+            <h1>{{ auction.productname }}</h1>
+            <p>{{ auction.quantity }}</p>
+            <p>{{ auction.bread_date }}</p>
+            <p>{{ auction.harvest_date }}</p>
+            <p>{{ auction.location }}</p>
+            <p>{{ auction.price }}</p>
+            <p>{{ auction.product_content }}</p>
+            <p>{{ auction.start_time }}</p>
+            <p>{{ auction.min_auction_time }}</p>
+        </div>
+    </div>
+    <div class="row" align="center">
+        <div class="col-md-12" align="center">
+            {% if auction_ready.user_ref %}
+                <h3>Winner of Auction</h3>
+                <a href="{% url 'profile' pk=auction_ready.user_ref.id %}"> {{  auction_ready.user_ref.username }} </a>
+                <p>{{ auction_ready.auction_price }}</p>
+            {% else %}
+                <h3>There is no a auctioneer</h3>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% endblock %}
