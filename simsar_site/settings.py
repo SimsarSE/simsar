@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'product',
     'djmoney',
     'auction',
+    'selling',
     'static',
+
 
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
