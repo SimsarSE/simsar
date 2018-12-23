@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'djmoney',
     'auction',
     'channels',
+    'background_task',
 
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

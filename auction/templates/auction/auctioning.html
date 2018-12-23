@@ -79,13 +79,12 @@
                 priceHolder.prepend("<li>" + data[0] + "</li>")
                 clearTimeout(ttt)
                 countdown();
-
             }
         }
 
-
         socket.onopen = function (e) {
             console.log("open", e)
+            countdown()
             formData.submit(function (event) {
                 event.preventDefault()
                 var priceInt = priceInput.val()
@@ -96,7 +95,6 @@
                     'id': id_auction
                 }
                 socket.send(JSON.stringify(finalData))
-
                 formData[0].reset()
             })
         }
@@ -115,7 +113,7 @@
         var remainder_first = parseInt(counter_first.textContent)
 
         function countdown() {
-            if (remainder_first <= 0) {
+            if (remainder_first < 1) {
                 clearTimeout(t)
                 $.ajax({
                     type: "POST",
@@ -131,14 +129,18 @@
 
 
         function f() {
-            var counter = document.getElementById("demo");
+
             if (remainder === 0) {
                 document.getElementById("submit").disabled = true
             }
-            counter.innerHTML = remainder;
+            document.getElementById("demo").innerHTML = remainder;
             remainder--;
-            if (remainder >= 0) {
+            if (remainder > 0) {
                 t = setTimeout(f, 1000);
+            }
+            else {
+                '{{ auction.end_of_auction }}'
+                window.location =  "{% url 'sold_auction' pk=auction.id %}"
             }
 
         }
@@ -172,9 +174,18 @@
             if (remainder_first > 0) {
                 t = setTimeout(timer, 1000);
             } else {
-                counter_first.innerHTML =""
-                var sec = 60
-                demo = document.getElementById("demo")
+                counter_first.innerHTML = ""
+                var sec = 0
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'extra_time' pk=auction.id %}",
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                    success: function (msg) {
+                        sec = parseInt(msg)
+                        demo = document.getElementById("demo")
+                        f1()
+                    }
+                })
                 function f1() {
                     sec--;
                     if (sec >= 0) {
@@ -182,10 +193,11 @@
                         ttt = setTimeout(f1, 1000);
                     }
                 }
-                f1()
+
             }
 
         }
+
 
     </script>
 {% endblock %}

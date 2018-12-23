@@ -45,7 +45,8 @@ def auction_detail(request, pk):
                 return redirect('auction_detail', pk=auction.pk)
             else:
                 form = AuctionReadyForm()
-            return render(request, 'auction/auctioning.html', {'form':form, 'auction':auction, 'auctionReadies': auctionReadies})
+            return render(request, 'auction/auctioning.html',
+                          {'form': form, 'auction': auction, 'auctionReadies': auctionReadies})
         else:
             return render(request, 'auction/auction_detail.html', {'auction': auction})
     else:
@@ -69,11 +70,31 @@ def auction_edit(request, pk):
     else:
         return render(request, 'auction/auction_list.html')
 
+
 def last_auction_ready(request, pk):
     last = AuctionReady.objects.filter(auction_ref=pk).order_by("-time_stamp").first().time_stamp
     last = last + timedelta(seconds=60)
-    new = last -timezone.now()
+    new = last - timezone.now()
     if last > timezone.now():
         return HttpResponse(new.seconds)
     return -1
 
+
+def extra_time(request, pk):
+    now = timezone.now()
+    auction = Auction.objects.get(id=pk)
+    auction_time = auction.start_time + timedelta(minutes=auction.min_auction_time) + timedelta(seconds=60)
+    result = auction_time - now
+    if auction_time > now:
+        return HttpResponse(result.seconds)
+    return HttpResponse(-1)
+
+
+def sold_action(request, pk):
+    current_user = request.user
+    auction = get_object_or_404(Auction, pk=pk)
+    if auction.is_end:
+        auction_ready = AuctionReady.objects.filter(auction_ref=auction).order_by("-time_stamp").first()
+        return render(request, 'auction/sold_auction.html', {'auction': auction, 'auction_ready': auction_ready})
+    else:
+        return redirect('auction_detail', pk=auction.pk)

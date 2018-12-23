@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from background_task import background
 from django.db import models
 from django.utils import timezone
 from djmoney.models.fields import MoneyField
@@ -20,6 +21,7 @@ class Auction(models.Model):
     min_auction_time =  models.IntegerField(verbose_name='Auction period of validity')
     start_time =  models.DateTimeField(verbose_name='Start Time')
     is_active = models.BooleanField(default=False)
+    is_end = models.BooleanField(default=False)
 
     def group_name(self):
         return "auction-%s" % self.id
@@ -37,8 +39,9 @@ class Auction(models.Model):
             return time.seconds
         return -1
 
-
-
+    def end_of_auction(self):
+        self.is_end = True
+        self.save()
 
 
 class AuctionReady(models.Model):
@@ -46,3 +49,5 @@ class AuctionReady(models.Model):
     user_ref = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     auction_price = MoneyField(max_digits=14, decimal_places=2, default_currency='TRY', default=0)
     time_stamp = models.DateTimeField(default=timezone.now, verbose_name='Time')
+
+    #
