@@ -16,8 +16,9 @@ class SignUp(generic.CreateView):
 
 def view_profile(request, pk):
     profile = get_object_or_404(CustomUser, pk=pk)
-    products = Product.objects.all()
-    args = {'user': profile, 'products': products}
+    products = Product.objects.filter(seller=CustomUser.objects.get(id=pk)).filter(is_sold=False)
+    products_2 = Product.objects.filter(seller=CustomUser.objects.get(id=pk)).filter(is_sold=True)
+    args = {'user': profile, 'products': products, 'products_2':products_2}
     return render(request, 'profile.html', args)
 
 def edit_profile(request):
