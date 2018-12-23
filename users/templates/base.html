@@ -58,6 +58,10 @@
                         <a class="nav-link" href="{% url 'auction_new' %}">New Auction <span
                                 class="sr-only">(current)</span></a>
                     </li>
+                        <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'auction_list' %}">Auction List <span
+                                class="sr-only">(current)</span></a>
+                    </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="{% url 'profile' pk=request.user.pk %}">Profile <span class="sr-only">(current)</span></a>
                     </li>
