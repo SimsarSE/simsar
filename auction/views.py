@@ -11,6 +11,7 @@ def auction_list(request):
     auctions = Auction.objects.all()
     for auction in auctions:
         Auction.create_auctionReady(auction)
+        Auction.end_of_auction(auction)
     return render(request, 'auction/auction_list.html', {'auctions': auctions})
 
 
@@ -72,12 +73,15 @@ def auction_edit(request, pk):
 
 
 def last_auction_ready(request, pk):
-    last = AuctionReady.objects.filter(auction_ref=pk).order_by("-time_stamp").first().time_stamp
-    last = last + timedelta(seconds=60)
-    new = last - timezone.now()
-    if last > timezone.now():
-        return HttpResponse(new.seconds)
-    return -1
+    try:
+        last = AuctionReady.objects.filter(auction_ref=Auction.objects.get(id=pk)).order_by("-time_stamp").first().time_stamp
+        last = last + timedelta(seconds=60)
+        new = last - timezone.now()
+        if last > timezone.now():
+            return HttpResponse(new.seconds)
+    except:
+        return HttpResponse(-1)
+    return HttpResponse(-1)
 
 
 def extra_time(request, pk):

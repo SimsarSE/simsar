@@ -40,8 +40,14 @@ class Auction(models.Model):
         return -1
 
     def end_of_auction(self):
-        self.is_end = True
-        self.save()
+        try:
+            last_time = AuctionReady.objects.filter(auction_ref=self).order_by("-time_stamp").first().time_stamp + timedelta(seconds=60)
+            now = timezone.now()
+            if last_time < now:
+                self.is_end = True
+                self.save()
+        except:
+            pass
 
 
 class AuctionReady(models.Model):

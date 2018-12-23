@@ -24,7 +24,7 @@ SECRET_KEY = '33o1k8v=bw6%%38g(=m8%0w@8hx_9&05+gm#u2y7tq03*k7%ez'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.pythonanywhere.com']
+ALLOWED_HOSTS = ["192.168.1.29", '127.0.0.1', 'localhost', '.pythonanywhere.com']
 
 # Application definition
 
@@ -81,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-#WSGI_APPLICATION = 'simsar_site.wsgi.application'
+# WSGI_APPLICATION = 'simsar_site.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -144,4 +144,3 @@ CHANNEL_LAYERS = {
         },
     },
 }
-

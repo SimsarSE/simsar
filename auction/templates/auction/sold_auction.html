@@ -26,7 +26,7 @@
         <div class="col-md-12" align="center">
             {% if auction_ready.user_ref %}
                 <h3>Winner of Auction</h3>
-                <a href="{% url 'profile' pk=auction_ready.user_ref.id %}"> {{ auctionReady.user_ref.username }} </a>
+                <a href="{% url 'profile' pk=auction_ready.user_ref.id %}"> {{  auction_ready.user_ref.username }} </a>
                 <p>{{ auction_ready.auction_price }}</p>
             {% else %}
                 <h3>There is no a auctioneer</h3>
