@@ -1,13 +1,19 @@
+from django.utils import timezone
+from datetime import timedelta
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from auction.models import Auction, AuctionReady
-from .forms import AuctionForm
+from .forms import AuctionForm, AuctionReadyForm
 
 
 def auction_list(request):
     auctions = Auction.objects.all()
     for auction in auctions:
         Auction.create_auctionReady(auction)
+        Auction.end_of_auction(auction)
     return render(request, 'auction/auction_list.html', {'auctions': auctions})
+
 
 def auction_new(request):
     current_user = request.user
@@ -27,11 +33,26 @@ def auction_new(request):
 
 
 def auction_detail(request, pk):
+    auctionReadies = AuctionReady.objects.all().order_by('-auction_price')
+    current_user = request.user
     auction = get_object_or_404(Auction, pk=pk)
-    if auction.is_active:
-        return render(request, 'auction/auctioning.html', {'auction': auction})
+    if current_user.is_authenticated:
+        if auction.is_active:
+            form = AuctionReadyForm(request.POST)
+            if form.is_valid():
+                auctionReady = form.save(commit=False)
+                auctionReady.user_ref = current_user
+                auctionReady.auction_ref = auction
+                return redirect('auction_detail', pk=auction.pk)
+            else:
+                form = AuctionReadyForm()
+            return render(request, 'auction/auctioning.html',
+                          {'form': form, 'auction': auction, 'auctionReadies': auctionReadies})
+        else:
+            return render(request, 'auction/auction_detail.html', {'auction': auction})
     else:
-        return render(request, 'auction/auction_detail.html', {'auction': auction})
+        return redirect('signup')
+
 
 def auction_edit(request, pk):
     current_user = request.user
@@ -49,3 +70,35 @@ def auction_edit(request, pk):
         return render(request, 'auction/auction_edit.html', {'form': form})
     else:
         return render(request, 'auction/auction_list.html')
+
+
+def last_auction_ready(request, pk):
+    try:
+        last = AuctionReady.objects.filter(auction_ref=Auction.objects.get(id=pk)).order_by("-time_stamp").first().time_stamp
+        last = last + timedelta(seconds=60)
+        new = last - timezone.now()
+        if last > timezone.now():
+            return HttpResponse(new.seconds)
+    except:
+        return HttpResponse(-1)
+    return HttpResponse(-1)
+
+
+def extra_time(request, pk):
+    now = timezone.now()
+    auction = Auction.objects.get(id=pk)
+    auction_time = auction.start_time + timedelta(minutes=auction.min_auction_time) + timedelta(seconds=60)
+    result = auction_time - now
+    if auction_time > now:
+        return HttpResponse(result.seconds)
+    return HttpResponse(-1)
+
+
+def sold_action(request, pk):
+    current_user = request.user
+    auction = get_object_or_404(Auction, pk=pk)
+    if auction.is_end:
+        auction_ready = AuctionReady.objects.filter(auction_ref=auction).order_by("-time_stamp").first()
+        return render(request, 'auction/sold_auction.html', {'auction': auction, 'auction_ready': auction_ready})
+    else:
+        return redirect('auction_detail', pk=auction.pk)

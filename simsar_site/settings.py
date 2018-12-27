@@ -24,7 +24,7 @@ SECRET_KEY = '33o1k8v=bw6%%38g(=m8%0w@8hx_9&05+gm#u2y7tq03*k7%ez'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.pythonanywhere.com']
+ALLOWED_HOSTS = ["192.168.1.29", '127.0.0.1', 'localhost', '.pythonanywhere.com']
 
 # Application definition
 
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'product',
     'djmoney',
     'auction',
+    'channels',
+    'background_task',
     'selling',
     'static',
 
@@ -64,6 +66,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'simsar_site.urls'
+ASGI_APPLICATION = "simsar_site.routing.application"
 
 TEMPLATES = [
     {
@@ -81,7 +84,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'simsar_site.wsgi.application'
+# WSGI_APPLICATION = 'simsar_site.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -142,3 +145,11 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'product_image')
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
