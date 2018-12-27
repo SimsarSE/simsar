@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'channels',
     'background_task',
     'selling',
+    'bootstrap4',
     'static',
+    'bootstrap_datepicker_plus',
 
 
 ]
