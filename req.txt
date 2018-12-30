@@ -7,5 +7,4 @@ Pillow
 django-money
 channels==2.1.2
 channels_redis
-django-background-tasks
 
