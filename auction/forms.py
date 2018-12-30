@@ -2,6 +2,7 @@ from django import forms
 
 from .models import Auction, AuctionReady
 
+from product.forms import CITIES
 
 class AuctionForm(forms.ModelForm):
     class Meta:
@@ -11,6 +12,7 @@ class AuctionForm(forms.ModelForm):
         widgets = {
             'bread_date': forms.DateInput(attrs={'type': 'date'}),
             'harvest_date': forms.DateInput(attrs={'type': 'date'}),
+            'location': forms.Select(choices=CITIES,)
         }
 class AuctionReadyForm(forms.ModelForm):
     class Meta:
