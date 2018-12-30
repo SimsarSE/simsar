@@ -1,40 +1,57 @@
 {% include 'base.html' %}
 
 {% block content %}
-    <div class="row" align="center">
-        <div class="col-md-12" align="center">
-            {% if auction.product_photo %}
-                <img src="{{ auction.product_photo.url }}" width="500">
-            {% endif %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12" align="center">
-            <a href="{% url 'profile' pk=auction.auctioneer.id %}"> {{ auction.auctioneer.username }}  </a>
-            <h1>{{ auction.productname }}</h1>
-            <p>{{ auction.quantity }}</p>
-            <p>{{ auction.bread_date }}</p>
-            <p>{{ auction.harvest_date }}</p>
-            <p>{{ auction.location }}</p>
-            <p>{{ auction.price }}</p>
-            <p>{{ auction.product_content }}</p>
-            <p>{{ auction.start_time }}</p>
-            <p>{{ auction.min_auction_time }}</p>
-        </div>
-    </div>
-    {% if auction.is_active %}
-        <div class="row" align="center">
-            <div class="col-md-12">
-                <button type="reset">Pay More</button>
+    <style>
+        .col-md-9 > h1 {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            font-style: normal;
+            color: #79282e;
+        }
+    </style>
+    <div class="container" style="margin-top: 60px">
+        <div class="row">
+            <div class="col-sm-6 ">
+                {% if auction.product_photo %}
+                    <img src="{{ auction.product_photo.url }}" width="500">
+                {% endif %}
+            </div>
+            <div class="col-sm-6">
+                <div class="col-md-9">
+                    <h1> Product Name : {{ auction.productname }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Product Quantity : {{ auction.quantity }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Product name : {{ auction.bread_date }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Harvest Date : {{ auction.harvest_date }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Location : {{ auction.location.capitalize }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Product price : {{ auction.price }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Product price : {{ auction.start_time }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Product content :
+                        <text>{{ auction.product_content }}</text>
+                    </h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Product owner :
+                        <a href="{% url 'profile' pk=auction.auctioneer.id %}">
+                            <text>{{ auction.auctioneer.username }}</text>
+                        </a>
+                    </h1>
+                </div>
             </div>
         </div>
-    {% endif %}
-    <div class="row" align="center">
-        <div class="col-md-12">
-            {% if auction.auctioneer == request.user %}
-                <a href="{% url 'auction_edit' pk=auction.pk %}"> Edit <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-            {% endif %}
-        </div>
+    </div>
+    <div align="center">
+        {% if auction.auctioneer == request.user %}
+            <a href="{% url 'auction_edit' pk=auction.pk %}">
+                <button style="padding: 4px 7px; color: #fff" class="btn btn-warning">edit <span
+                        class="glyphicon glyphicon-pencil"></span></button>
+            </a>
+        {% endif %}
     </div>
 {% endblock %}
