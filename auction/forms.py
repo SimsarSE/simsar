@@ -1,8 +1,9 @@
 from django import forms
 
 from .models import Auction, AuctionReady
-
 from product.forms import CITIES
+
+from bootstrap_datepicker_plus import DateTimePickerInput
 
 class AuctionForm(forms.ModelForm):
     class Meta:
@@ -12,7 +13,11 @@ class AuctionForm(forms.ModelForm):
         widgets = {
             'bread_date': forms.DateInput(attrs={'type': 'date'}),
             'harvest_date': forms.DateInput(attrs={'type': 'date'}),
-            'location': forms.Select(choices=CITIES,)
+            'location': forms.Select(choices=CITIES,),
+            'start_time': DateTimePickerInput(options={
+                "format": "DD/MM/YYYY HH:mm",
+                "locale": "tr"
+            })
         }
 class AuctionReadyForm(forms.ModelForm):
     class Meta:
