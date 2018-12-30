@@ -73,6 +73,7 @@ def auction_edit(request, pk):
 
 
 def last_auction_ready(request, pk):
+    auction = Auction.objects.get(id=pk)
     try:
         last = AuctionReady.objects.filter(auction_ref=Auction.objects.get(id=pk)).order_by("-time_stamp").first().time_stamp
         last = last + timedelta(seconds=60)
@@ -80,7 +81,10 @@ def last_auction_ready(request, pk):
         if last > timezone.now():
             return HttpResponse(new.seconds)
     except:
-        return HttpResponse(-1)
+        auction_time = auction.start_time + timedelta(minutes=auction.min_auction_time) + timedelta(seconds=60)
+        past = auction_time -timezone.now()
+        if auction_time > timezone.now():
+            return HttpResponse(past.seconds)
     return HttpResponse(-1)
 
 
