@@ -7,6 +7,7 @@ from djmoney.models.fields import MoneyField
 from users.models import CustomUser
 import time
 
+
 class Auction(models.Model):
     productname = models.CharField(max_length=120, verbose_name='Product Name')
     quantity = models.IntegerField(verbose_name='Product Quantity')
@@ -18,8 +19,8 @@ class Auction(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name='Create Date')
     product_photo = models.ImageField(verbose_name='Product Photo', blank=True)
     auctioneer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='auctioneer', default=0)
-    min_auction_time =  models.IntegerField(verbose_name='Auction period of validity')
-    start_time =  models.DateTimeField(verbose_name='Start Time')
+    min_auction_time = models.IntegerField(verbose_name='Auction period of validity')
+    start_time = models.DateTimeField(verbose_name='Start Time')
     is_active = models.BooleanField(default=False)
     is_end = models.BooleanField(default=False)
 
@@ -34,20 +35,25 @@ class Auction(models.Model):
 
     def countdown(self):
         minTime = self.start_time + timedelta(minutes=self.min_auction_time)
-        time = minTime -timezone.now()
+        time = minTime - timezone.now()
         if minTime > timezone.now():
             return time.seconds
         return -1
 
     def end_of_auction(self):
         try:
-            last_time = AuctionReady.objects.filter(auction_ref=self).order_by("-time_stamp").first().time_stamp + timedelta(seconds=60)
+            last_time = AuctionReady.objects.filter(auction_ref=self).order_by(
+                "-time_stamp").first().time_stamp + timedelta(seconds=60)
             now = timezone.now()
             if last_time < now:
                 self.is_end = True
                 self.save()
         except:
-            pass
+            ownerness = self.start_time + timedelta(minutes=self.min_auction_time) + timedelta(seconds=60)
+            now = timezone.now()
+            if ownerness < now:
+                self.is_end = True
+                self.save()
 
 
 class AuctionReady(models.Model):
