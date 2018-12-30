@@ -47,8 +47,7 @@ INSTALLED_APPS = [
     'background_task',
     'selling',
     'static',
-
-
+    'bootstrap_datepicker_plus',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

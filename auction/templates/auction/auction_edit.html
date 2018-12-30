@@ -1,5 +1,7 @@
 {% include 'base.html' %}
 
+{{ form.media }}
+
 {% block content %}
     {% load crispy_forms_tags %}
     <div class="col-md-12">
@@ -12,4 +14,7 @@
             </div>
         </div>
     </div>
+    <script>
+            document.getElementById("id_price_1").hidden = true
+    </script>
 {% endblock %}
