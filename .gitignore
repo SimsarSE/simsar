@@ -109,4 +109,5 @@ simsarvenv
 #images
 product_image/**
 !product_image/.gitkeep
+!product_image/product_place_holder.png
 

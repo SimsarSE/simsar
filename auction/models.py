@@ -17,7 +17,7 @@ class Auction(models.Model):
     product_content = models.TextField(verbose_name='Product Information')
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='TRY')
     create_date = models.DateTimeField(default=timezone.now, verbose_name='Create Date')
-    product_photo = models.ImageField(verbose_name='Product Photo', blank=True)
+    product_photo = models.ImageField(verbose_name='Product Photo', blank=True, default='product_place_holder.png')
     auctioneer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='auctioneer', default=0)
     min_auction_time = models.IntegerField(verbose_name='Auction period of validity')
     start_time = models.DateTimeField(verbose_name='Start Time')

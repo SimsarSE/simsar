@@ -14,6 +14,6 @@ class Product(models.Model):
     product_content = models.TextField(verbose_name='Product Information')
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='TRY')
     create_date = models.DateTimeField(default=timezone.now,verbose_name='Create Date')
-    product_photo = models.ImageField(verbose_name='Product Photo',blank=True)
+    product_photo = models.ImageField(verbose_name='Product Photo',blank=True, default='product_place_holder.png')
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='seller', default=0)
     is_sold = models.BooleanField(default=False)
