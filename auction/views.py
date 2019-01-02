@@ -72,32 +72,6 @@ def auction_edit(request, pk):
         return render(request, 'auction/auction_list.html')
 
 
-def last_auction_ready(request, pk):
-    auction = Auction.objects.get(id=pk)
-    try:
-        last = AuctionReady.objects.filter(auction_ref=Auction.objects.get(id=pk)).order_by("-time_stamp").first().time_stamp
-        last = last + timedelta(seconds=60)
-        new = last - timezone.now()
-        if last > timezone.now():
-            return HttpResponse(new.seconds)
-    except:
-        auction_time = auction.start_time + timedelta(minutes=auction.min_auction_time) + timedelta(seconds=60)
-        past = auction_time -timezone.now()
-        if auction_time > timezone.now():
-            return HttpResponse(past.seconds)
-    return HttpResponse(-1)
-
-
-def extra_time(request, pk):
-    now = timezone.now()
-    auction = Auction.objects.get(id=pk)
-    auction_time = auction.start_time + timedelta(minutes=auction.min_auction_time) + timedelta(seconds=60)
-    result = auction_time - now
-    if auction_time > now:
-        return HttpResponse(result.seconds)
-    return HttpResponse(-1)
-
-
 def sold_action(request, pk):
     current_user = request.user
     auction = get_object_or_404(Auction, pk=pk)
