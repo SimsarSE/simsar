@@ -173,7 +173,7 @@
                 var css_value = "countdown " + time + "s linear infinite forwards"
                 document.getElementById("timer_circle").style.animation = css_value
                 countdown = time;
-                if (countdown < '60') {
+                if (countdown < 60) {
                     var elem_old = document.getElementById("countdown")
                     var elem_new = elem_old.cloneNode(true)
                     document.getElementById("parent_of_countdown").insertBefore(elem_new, elem_old)
@@ -212,10 +212,15 @@
 
         countdownNumberEl.textContent = countdown;
 
+
         setInterval(function () {
             countdown = --countdown <= 0 ? 0 : countdown;
 
             countdownNumberEl.textContent = countdown;
+            if (countdown === 0){
+                '{{ auction.end_of_auction }}'
+                window.location = '{% url 'sold_auction' pk=auction.id %}'
+            }
         }, 1000);
 
 
