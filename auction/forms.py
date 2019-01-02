@@ -1,4 +1,5 @@
 from django import forms
+from djmoney.forms import MoneyField
 
 from .models import Auction, AuctionReady
 from product.forms import CITIES
@@ -25,3 +26,5 @@ class AuctionReadyForm(forms.ModelForm):
         fields = (
             'auction_price',
         )
+
+

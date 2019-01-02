@@ -8,7 +8,7 @@ from .forms import AuctionForm, AuctionReadyForm
 
 
 def auction_list(request):
-    auctions = Auction.objects.all()
+    auctions = Auction.objects.all().order_by('start_time')
     for auction in auctions:
         Auction.create_auctionReady(auction)
         Auction.end_of_auction(auction)
@@ -76,7 +76,7 @@ def sold_action(request, pk):
     current_user = request.user
     auction = get_object_or_404(Auction, pk=pk)
     if auction.is_end:
-        auction_ready = AuctionReady.objects.filter(auction_ref=auction).order_by("-time_stamp").first()
+        auction_ready = AuctionReady.objects.filter(auction_ref=auction).order_by("time_stamp")
         return render(request, 'auction/sold_auction.html', {'auction': auction, 'auction_ready': auction_ready})
     else:
         return redirect('auction_detail', pk=auction.pk)

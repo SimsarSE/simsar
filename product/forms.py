@@ -1,4 +1,5 @@
 from django import forms
+from djmoney.forms import MoneyField
 
 from .models import Product
 
@@ -96,4 +97,3 @@ class ProductForm(forms.ModelForm):
             'harvest_date': forms.DateInput(attrs={'type': 'date'}),
             'location': forms.Select(choices=CITIES)
         }
-

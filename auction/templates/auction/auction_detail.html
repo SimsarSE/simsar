@@ -29,9 +29,11 @@
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
                     <h1> Location : {{ auction.location.capitalize }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <h1> Product price : {{ auction.price }}</h1>
+                    <h1> Auction start price : {{ auction.price }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <h1> Product price : {{ auction.start_time }}</h1>
+                    <h1> Start time : {{ auction.start_time }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Auction period of validity : {{ auction.min_auction_time }}(min)</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
                     <h1> Product content :
                         <text>{{ auction.product_content }}</text>
