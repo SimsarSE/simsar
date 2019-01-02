@@ -19,7 +19,7 @@ class Auction(models.Model):
     create_date = models.DateTimeField(default=timezone.now, verbose_name='Create Date')
     product_photo = models.ImageField(verbose_name='Product Photo', blank=True, default='product_place_holder.png')
     auctioneer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='auctioneer', default=0)
-    min_auction_time = models.IntegerField(verbose_name='Auction period of validity')
+    min_auction_time = models.IntegerField(verbose_name='Auction period of validity(min)')
     start_time = models.DateTimeField(verbose_name='Start Time')
     is_active = models.BooleanField(default=False)
     is_end = models.BooleanField(default=False)
@@ -33,27 +33,48 @@ class Auction(models.Model):
             self.is_active = True
             self.save()
 
-    def countdown(self):
-        minTime = self.start_time + timedelta(minutes=self.min_auction_time)
-        time = minTime - timezone.now()
-        if minTime > timezone.now():
-            return time.seconds
-        return -1
-
     def end_of_auction(self):
+        now = timezone.now()
+        auction_end_time = self.start_time + timedelta(minutes=self.min_auction_time)
         try:
-            last_time = AuctionReady.objects.filter(auction_ref=self).order_by(
+            last_offer_time = AuctionReady.objects.filter(auction_ref=self).order_by(
                 "-time_stamp").first().time_stamp + timedelta(seconds=60)
-            now = timezone.now()
-            if last_time < now:
-                self.is_end = True
-                self.save()
+            if auction_end_time < last_offer_time:
+                if now > last_offer_time:
+                    self.is_end=True
+                    self.save()
+            else:
+                if now > auction_end_time:
+                    self.is_end=True
+                    self.save()
         except:
-            ownerness = self.start_time + timedelta(minutes=self.min_auction_time) + timedelta(seconds=60)
-            now = timezone.now()
-            if ownerness < now:
-                self.is_end = True
+            if now > auction_end_time:
+                self.is_end=True
                 self.save()
+
+
+    def remaind_time(self):
+        now = timezone.now()
+        auction_end_time = self.start_time + timedelta(minutes=self.min_auction_time)
+        try:
+            last_offer_time = AuctionReady.objects.filter(auction_ref=self).order_by(
+                "-time_stamp").first().time_stamp + timedelta(seconds=60)
+            if auction_end_time < last_offer_time:
+                if now < last_offer_time:
+                    return (last_offer_time-now).seconds
+                else:
+                    return -1
+            else:
+                if now < auction_end_time:
+                    return (auction_end_time-now).seconds
+                else:
+                    return -1
+        except:
+            if now < auction_end_time:
+                return (auction_end_time - now).seconds
+            else:
+                return -1
+
 
 
 class AuctionReady(models.Model):
@@ -61,5 +82,3 @@ class AuctionReady(models.Model):
     user_ref = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     auction_price = MoneyField(max_digits=14, decimal_places=2, default_currency='TRY', default=0)
     time_stamp = models.DateTimeField(default=timezone.now, verbose_name='Time')
-
-    #

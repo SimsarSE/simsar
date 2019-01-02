@@ -20,6 +20,51 @@
             color: #79282e;
         }
 
+        #countdown {
+            position: relative;
+            margin: auto;
+            margin-top: 100px;
+            height: 100px;
+            width: 100px;
+            text-align: center;
+        }
+
+        #countdown-number {
+            margin-top: 40px;
+            color: #79282e;
+            display: inline-block;
+            line-height: 40px;
+            font-weight: bold;
+            font-size: 20px; ;
+        }
+
+        svg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            transform: rotateY(-180deg) rotateZ(-90deg);
+        }
+
+        svg circle {
+            stroke-dasharray: 189px;
+            stroke-dashoffset: 0px;
+            stroke-linecap: round;
+            stroke-width: 10px;
+            stroke:  #F19425;
+            fill: none;
+        }
+
+        @keyframes countdown {
+            from {
+                stroke-dashoffset: 0px;
+            }
+            to {
+                stroke-dashoffset: 189px;
+            }
+        }
+
     </style>
 
     <div class="container" style="margin-top: 60px">
@@ -60,9 +105,13 @@
     </div>
     <br>
     <div class="row" align="center">
-        <div class="col-md-6">
-            <h1 id="demo"></h1>
-            <h1 id="first-counter">{{ auction.countdown }}</h1>
+        <div class="col-md-6" id="parent_of_countdown">
+            <div id="countdown" class="countdown">
+                <div id="countdown-number"></div>
+                <svg id="deneme">
+                    <circle id="timer_circle" r="30" cx="38" cy="50" ></circle>
+                </svg>
+            </div>
             <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
             <form method="POST" enctype="multipart/form-data" class="post-form" name="offer-form">{% csrf_token %}
                 <input type="hidden" id="myUsername" value="{{ user.username }}"/>
@@ -87,158 +136,88 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script>
+        var countdown;
         $(document).ready(function () {
-            document.getElementById("id_auction_price_0").value = ''
-            timer()
-        })
-        var formData = $(".post-form")
-        var priceInput = $("#id_auction_price_0")
-        var priceHolder = $('#price-items')
-        var me = $('#myUsername').val()
-        var id = $('#id_auction').val()
-        var demo = $('#demo')
-        //console.log(window.location)
-        var loc = window.location
-        var ttt = null;
+            document.getElementById("id_auction_price_0").value = '';
+            var css_value = "countdown " + '{{ auction.remaind_time }}' + "s linear infinite forwards"
+            document.getElementById("timer_circle").style.animation = css_value
+            countdown = '{{ auction.remaind_time }}'
+
+        });
+        var formData = $(".post-form");
+        var priceInput = $("#id_auction_price_0");
+        var priceHolder = $('#price-items');
+        var id = $('#id_auction').val();
+        var loc = window.location;
+
+        var wsStart = 'ws://' + window.location.host + window.location.pathname;
+        var endpoint = wsStart + loc.host + loc.pathname;
+        var socket = new ReconnectingWebSocket(endpoint);
+        var time;
+        var countdownNumberEl = document.getElementById('countdown-number');
 
 
-        var wsStart = 'ws://' + window.location.host + window.location.pathname
         if (loc.protocol === 'https:') {
             wsStart = 'wss://'
         }
-        var endpoint = wsStart + loc.host + loc.pathname
-
-        var socket = new ReconnectingWebSocket(endpoint)
 
         socket.onmessage = function (e) {
-            console.log("message", e)
-            var data = e.data.split("@")
+            console.log("message", e);
+            var data = e.data.split("@");
             if (data[1] === id) {
-                priceHolder.prepend("<li>" + data[0] + "</li>")
-                clearTimeout(ttt)
-                countdown();
+                document.getElementById("countdown").style.strokeDashoffset = 0
+
+                var data_with_time = data[0].split("**");
+                priceHolder.prepend("<li>" + data_with_time[0] + "</li>")
+                time = data_with_time[1]
+                var css_value = "countdown " + time + "s linear infinite forwards"
+                document.getElementById("timer_circle").style.animation = css_value
+                countdown = time;
+                if (countdown < '60') {
+                    var elem_old = document.getElementById("countdown")
+                    var elem_new = elem_old.cloneNode(true)
+                    document.getElementById("parent_of_countdown").insertBefore(elem_new, elem_old)
+                    document.getElementById("parent_of_countdown").removeChild(elem_old)
+                    countdownNumberEl = document.getElementById('countdown-number');
+                }
             }
-        }
+        };
 
         socket.onopen = function (e) {
-            console.log("open", e)
-            countdown()
+            console.log("open", e);
             formData.submit(function (event) {
-                event.preventDefault()
-                var priceInt = priceInput.val()
-                var id_auction = id
+                event.preventDefault();
+                var priceInt = priceInput.val();
+                var id_auction = id;
                 //priceHolder.append("<li>" + priceInt + " " + me + "</li>")
                 var finalData = {
                     'price': priceInt,
                     'id': id_auction
-                }
-                socket.send(JSON.stringify(finalData))
-                formData[0].reset()
+                };
+                socket.send(JSON.stringify(finalData));
+                formData[0].reset();
             })
-        }
+        };
 
         socket.onerror = function (e) {
             console.log("error", e)
-        }
+        };
 
         socket.onclose = function (e) {
             console.log("close", e)
-        }
+        };
 
-        var remainder = 0
-        var t = null
-        var counter_first = document.getElementById("first-counter");
-        var remainder_first = parseInt(counter_first.textContent)
-
-        function countdown() {
-            if (remainder_first < 1) {
-                clearTimeout(t)
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'last_auction' pk=auction.id %}",
-                    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
-                    success: function (msg) {
-                        remainder = parseInt(msg)
-                        f()
-                    }
-                })
-            }
-        }
+        document.getElementById("id_auction_price_1").hidden = true;
 
 
-        function f() {
+        countdownNumberEl.textContent = countdown;
 
-            if (remainder === 0) {
-                document.getElementById("submit").disabled = true
-            }
-            document.getElementById("demo").innerHTML = remainder;
-            remainder--;
-            if (remainder > 0) {
-                t = setTimeout(f, 1000);
-            }
-            else {
-                '{{ auction.end_of_auction }}'
-                window.location = "{% url 'sold_auction' pk=auction.id %}"
-            }
+        setInterval(function () {
+            countdown = --countdown <= 0 ? 0 : countdown;
 
-        }
+            countdownNumberEl.textContent = countdown;
+        }, 1000);
 
 
-        $('#id_auction_price_0').keyup(function () {
-            var offer = parseFloat(document.forms["offer-form"]["auction_price_0"].value)
-            var last = 0
-            var lastPrice = 0
-            if ($("#price-items").children().length > 0) {
-                lastPrice = $("#price-items li:first-child").get(0).innerHTML
-                lastPrice = lastPrice.split(" ")
-                temp = lastPrice[0].split("₺")
-                last = parseFloat(temp[1].replace(",", ""))
-            }
-            var startPrice = document.getElementById("start_price").textContent
-            var float_price = parseFloat(startPrice.split(".")[0].replace(/\D/g, ""))
-
-            if (offer > float_price && offer > last) {
-                document.getElementById("submit").disabled = false
-            }
-            else {
-                document.getElementById("submit").disabled = true
-            }
-        });
-
-
-        function timer() {
-            counter_first.innerHTML = String(remainder_first);
-            remainder_first--;
-            if (remainder_first > 0) {
-                t = setTimeout(timer, 1000);
-            } else {
-                counter_first.innerHTML = ""
-                var sec = 0
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'extra_time' pk=auction.id %}",
-                    data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
-                    success: function (msg) {
-                        sec = parseInt(msg)
-                        demo = document.getElementById("demo")
-                        f1()
-                    }
-                })
-
-                function f1() {
-                    sec--;
-                    if (sec >= 0) {
-                        demo.innerHTML = String(sec);
-                        ttt = setTimeout(f1, 1000);
-                    } else {
-                        countdown()
-                    }
-                }
-
-            }
-
-        }
-
-        document.getElementById("id_auction_price_1").hidden = true
     </script>
 {% endblock %}

@@ -1,8 +1,11 @@
 import asyncio
 import json
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 from channels.consumer import AsyncConsumer
 from channels.db import database_sync_to_async
+from django.utils import timezone
 from twisted.protocols.memcache import ClientError
 
 from .models import AuctionReady, Auction
@@ -39,11 +42,13 @@ class AuctionConsumer(AsyncConsumer):
             if user.is_authenticated:
                 username = user.username
                 await self.create_auctio_ready(user, price, ref)
+            remaind_time = ref.remaind_time()
+
             await self.channel_layer.group_send(
                 self.auction_room,
                 {
                 "type": "auction_price",
-                'price': "₺" + price + " " + username + "@" + auction_id,
+                'price': "₺" + price + " " + username +"**"+str(remaind_time) + "@" + auction_id,
                 }
             )
 
