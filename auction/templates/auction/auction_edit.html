@@ -2,6 +2,12 @@
 
 {{ form.media }}
 
+ <script>
+        $(document).ready(function () {
+            document.getElementById('id_auction_price_1').hidden = true;
+        });
+    </script>
+
 {% block content %}
     {% load crispy_forms_tags %}
     <div class="col-md-12">

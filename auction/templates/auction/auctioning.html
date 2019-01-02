@@ -35,7 +35,7 @@
             display: inline-block;
             line-height: 40px;
             font-weight: bold;
-            font-size: 20px; ;
+            font-size: 20px;;
         }
 
         svg {
@@ -52,7 +52,7 @@
             stroke-dashoffset: 0px;
             stroke-linecap: round;
             stroke-width: 10px;
-            stroke:  #F19425;
+            stroke: #F19425;
             fill: none;
         }
 
@@ -66,6 +66,21 @@
         }
 
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
+    <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            document.getElementById('id_auction_price_1').hidden = true;
+            document.getElementById('id_auction_price_0').innerText = '';
+            document.getElementById("submit").disabled = true
+
+        });
+    </script>
+
 
     <div class="container" style="margin-top: 60px">
         <div class="row">
@@ -86,9 +101,11 @@
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
                     <h1> Location : {{ auction.location.capitalize }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <h1> Product price : <span id="start_price">{{ auction.price }}</span></h1>
+                    <h1> Auction start price : <span id="start_price">{{ auction.price }}</span></h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <h1> Product price : {{ auction.start_time }}</h1>
+                    <h1>Start Time : {{ auction.start_time }}</h1>
+                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
+                    <h1> Auction period of validity : {{ auction.min_auction_time }}(min)</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
                     <h1> Product content :
                         <text>{{ auction.product_content }}</text>
@@ -109,11 +126,12 @@
             <div id="countdown" class="countdown">
                 <div id="countdown-number"></div>
                 <svg id="deneme">
-                    <circle id="timer_circle" r="30" cx="38" cy="50" ></circle>
+                    <circle id="timer_circle" r="30" cx="38" cy="50"></circle>
                 </svg>
             </div>
             <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-            <form method="POST" enctype="multipart/form-data" class="post-form" name="offer-form">{% csrf_token %}
+            <form method="POST" enctype="multipart/form-data" class="post-form" name="offer-form"
+                  id="offer-form">{% csrf_token %}
                 <input type="hidden" id="myUsername" value="{{ user.username }}"/>
                 <input type="hidden" id="id_auction" value="{{ auction.id }}"/>
                 {{ form|crispy }}
@@ -133,8 +151,6 @@
             </ul>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script>
         var countdown;
         $(document).ready(function () {
@@ -189,7 +205,6 @@
                 event.preventDefault();
                 var priceInt = priceInput.val();
                 var id_auction = id;
-                //priceHolder.append("<li>" + priceInt + " " + me + "</li>")
                 var finalData = {
                     'price': priceInt,
                     'id': id_auction
@@ -207,7 +222,7 @@
             console.log("close", e)
         };
 
-        document.getElementById("id_auction_price_1").hidden = true;
+        //document.getElementById("id_auction_price_1").hidden = true;
 
 
         countdownNumberEl.textContent = countdown;
@@ -217,12 +232,39 @@
             countdown = --countdown <= 0 ? 0 : countdown;
 
             countdownNumberEl.textContent = countdown;
-            if (countdown === 0){
+            if (countdown === 0) {
                 '{{ auction.end_of_auction }}'
                 window.location = '{% url 'sold_auction' pk=auction.id %}'
             }
         }, 1000);
-
-
     </script>
+    <script>
+        $('#id_auction_price_0').keyup(function () {
+            var offer = parseFloat(document.forms["offer-form"]["auction_price_0"].value)
+            var last = 0
+            var lastPrice = 0
+            if ($("#price-items").children().length > 0) {
+                lastPrice = $("#price-items li:first-child").get(0).innerHTML
+                lastPrice = lastPrice.split(" ")
+                temp = lastPrice[0].split("₺")
+                last = parseFloat(temp[1].replace(",", ""))
+            }
+            var startPrice = document.getElementById("start_price").textContent
+            var float_price = parseFloat(startPrice.split(".")[0].replace(/\D/g, ""))
+            if (offer > float_price && offer > last) {
+                document.getElementById("submit").disabled = false
+            }
+            else {
+                document.getElementById("submit").disabled = true
+            }
+        });
+    </script>
+    <script>
+        var current = '{{ request.user.username }}'
+        var auctioneer = '{{ auction.auctioneer.username }}'
+        if (current === auctioneer) {
+            document.getElementById('id_auction_price_0').readOnly = true
+        }
+    </script>
+
 {% endblock %}

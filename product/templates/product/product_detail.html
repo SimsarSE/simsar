@@ -62,19 +62,22 @@
             </div>
         </div>
     </div>
+    <div class="row">
+    <div class="col-md-6" align="center">
     {% if product.seller == user %}
-        <ul>
+        <ul style="margin-top: 50px; margin-left: 50px; list-style: none;">
             {% for i in offer_list %}
-                <li id="{{ i.id }}"><a
+                <h1><strong><li id="{{ i.id }}"><a
                         href="{% url 'profile' pk=i.offer_bidder.id %}">{{ i.offer_bidder.username }}</a> {{ i.offer_cost }}
                     <button class="btn btn-success" onclick="accept({{ i.id }})">Accept</button>
                     <button onclick="reject({{ i.id }})" class="btn btn-warning">Reject</button>
-                </li>
+                </li></strong></h1>
+                <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
             {% endfor %}
         </ul>
     {% endif %}
-
-
+</div>
+</div>
     <div align="center">
         {% if product.seller == request.user %}
             <a href="{% url 'product_edit' pk=product.pk %}">
@@ -87,10 +90,11 @@
     <div align="center" class="modal" id="modalForm" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content" style="height: 250px; ">
-                <p style="margin-top: 20px"><b>Offer</b><br></p>
-                <input type="text" id="offer_value" value="{{ product.price }}"
-                       style="margin-top: 50px"> <br>
-                <button class="btn btn-success" id="submit" style="margin-top: 20px">Offer
+                <h2 style="margin-top: 20px"><b>Offer</b><br></h2>
+                <h3 style="margin-top: 20px"><b>{{ product.price }}</b><br></h3>
+                <input type="number" class="numberinput" id="offer_value" value="{{ product.price }}"
+                       style="margin-top: 20px; margin-left: 190px" > <br>
+                <button class="btn btn-success" id="submit" style="margin-top: 20px; width: 120px; margin-left: 190px">Offer
                 </button>
             </div>
         </div>

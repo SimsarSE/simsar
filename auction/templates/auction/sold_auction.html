@@ -3,7 +3,7 @@
 {% block content %}
 
     <style>
-        .col-md-9 > h1,p {
+        .col-md-9 > h1, p {
             margin-top: 20px;
             font-weight: bold;
             font-size: 18px;
@@ -11,56 +11,81 @@
             color: #79282e;
         }
     </style>
+    <div class="row" align="center">
+        <div align="center" id="chartContainer" style="height: 370px; width: 80%;"></div>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    </div>
 
     <div class="container" style="margin-top: 60px">
-
-
         <div class="row">
             <div class="col-sm-6 ">
                 {% if auction.product_photo %}
-                    <img src="{{ auction.product_photo.url }}" width="500">
+                    <img src="{{ auction.product_photo.url }}" width="500" height="500">
                 {% endif %}
             </div>
-
             <div class="col-sm-6">
                 <div class="col-md-9">
-                    <a href="{% url 'profile' pk=auction.auctioneer.id %}"> {{ auction.auctioneer.username }}  </a>
+                    <h1> Product Name : {{ auction.productname }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <h1>{{ auction.productname }}</h1>
+                    <h1> Product Quantity : {{ auction.quantity }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <p>{{ auction.quantity }}</p>
+                    <h1> Product name : {{ auction.bread_date }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <p>{{ auction.bread_date }}</p>
+                    <h1> Harvest Date : {{ auction.harvest_date }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <p>{{ auction.harvest_date }}</p>
+                    <h1> Location : {{ auction.location.capitalize }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <p>{{ auction.location }}</p>
+                    <h1> Auction start price : <span id="start_price">{{ auction.price }}</span></h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <p>{{ auction.price }}</p>
+                    <h1> Product price : {{ auction.start_time }}</h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <p>{{ auction.product_content }}</p>
+                    <h1> Product content :
+                        <text>{{ auction.product_content }}</text>
+                    </h1>
                     <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <p>{{ auction.start_time }}</p>
-                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                    <p>{{ auction.min_auction_time }}</p>
-                    <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-
-                    {% if auction_ready.user_ref %}
+                    {% if auction_ready.last.user_ref %}
                         <h3>Winner of Auction</h3>
                         <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                        <a href="{% url 'profile' pk=auction_ready.user_ref.id %}"> {{ auction_ready.user_ref.username }} </a>
+                        <a href="{% url 'profile' pk=auction_ready.last.user_ref.id %}"> {{ auction_ready.last.user_ref.username }} </a>
                         <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
-                        <p>{{ auction_ready.auction_price }}</p>
+                        <p>{{ auction_ready.last.auction_price }}</p>
                         <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
                     {% else %}
                         <h3>There is no a auctioneer</h3>
                         <hr style="size: 36px;width:420px; border-width: 2px; border-style: wave; display: block; background-color: #F19425">
                     {% endif %}
-
                 </div>
             </div>
         </div>
-      </div>
+    </div>
 
+    <script>
+        var values_money = []
+        window.onload = function () {
+            {% for readyAuction in auction_ready %}
+                var splitdata = '{{ readyAuction.auction_price }}'.split("₺")[1];
+                var floatData = parseFloat(splitdata)
+                values_money.push({y: floatData})
+            {% endfor %}
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "{{ auction.productname }}"
+                },
+                axisY: {
+                    includeZero: false
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: values_money
+                }]
+            });
+
+
+            chart.render();
+
+        }
+    </script>
 
 {% endblock %}
