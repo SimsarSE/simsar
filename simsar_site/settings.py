@@ -24,7 +24,7 @@ SECRET_KEY = '33o1k8v=bw6%%38g(=m8%0w@8hx_9&05+gm#u2y7tq03*k7%ez'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.43.165","192.168.1.29", '127.0.0.1', 'localhost', '.pythonanywhere.com']
+ALLOWED_HOSTS = ["192.168.43.165", "192.168.1.29", '127.0.0.1', 'localhost', '.pythonanywhere.com']
 
 # Application definition
 
@@ -44,10 +44,10 @@ INSTALLED_APPS = [
     'djmoney',
     'auction',
     'channels',
-    'background_task',
     'selling',
     'static',
     'bootstrap_datepicker_plus',
+    'star_ratings',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -133,13 +133,12 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/',
 ]
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'product_image')

@@ -9,4 +9,5 @@ channels==2.1.2
 channels_redis
 django-bootstrap-datepicker-plus
 django-bootstrap4
+django-star-ratings
 
