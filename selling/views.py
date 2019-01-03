@@ -35,6 +35,7 @@ def accept(request, pk):
     sold.save()
     product.is_sold = True
     product.save()
+    offer.delete()
     return HttpResponse('')
 
 def reject(request, pk):

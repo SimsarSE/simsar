@@ -1,7 +1,7 @@
-from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from star_ratings.models import AbstractBaseRating
+
 
 class CustomUser(AbstractUser):
     GSM = PhoneNumberField(unique=True, blank=False)

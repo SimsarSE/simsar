@@ -4,9 +4,12 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+
+from selling.models import SoldProduct
 from .forms import CustomUserCreationForm, EditProfileForm
 from users.models import CustomUser
 from product.models import Product
+
 
 class SignUp(generic.CreateView):
     form_class = CustomUserCreationForm
@@ -14,12 +17,19 @@ class SignUp(generic.CreateView):
 
     template_name = 'signup.html'
 
+
 def view_profile(request, pk):
     profile = get_object_or_404(CustomUser, pk=pk)
     products = Product.objects.filter(seller=CustomUser.objects.get(id=pk)).filter(is_sold=False)
     products_2 = Product.objects.filter(seller=CustomUser.objects.get(id=pk)).filter(is_sold=True)
-    args = {'user': profile, 'products': products, 'products_2':products_2}
+    read_only = False
+    count = SoldProduct.objects.filter(sold_buyer=request.user).filter(sold_seller=profile).count()
+    if count > 0:
+        read_only = True
+
+    args = {'user': profile, 'products': products, 'products_2': products_2, 'read_only': read_only}
     return render(request, 'profile.html', args)
+
 
 def edit_profile(request):
     if request.method == 'POST':
@@ -32,6 +42,7 @@ def edit_profile(request):
         form = EditProfileForm(instance=request.user)
         args = {'form': form}
         return render(request, 'edit_profile.html', args)
+
 
 def change_password(request):
     if request.method == 'POST':
@@ -50,7 +61,8 @@ def change_password(request):
 
     return render(request, 'change_password.html', args)
 
+
 def product_info(request):
     products = Product.objects.all()
 
-    return render(request, 'profile.html' , {'products': products} )
+    return render(request, 'profile.html', {'products': products})
